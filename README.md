@@ -51,10 +51,6 @@ node scripts/check-puzzles.mjs
 
 The same check runs automatically on every pull request.
 
-## Use of generative AI
-
-In line with the course policy on GenAI use: an AI coding assistant helped draft these planning documents. All design decisions and mathematical content were reviewed and decided by the group.
-
 ## References
 
 - Devlin, K. (2000). Prologue: What is mathematics? In *The language of mathematics: Making the invisible visible* (pp. 1–12). W. H. Freeman and Co. https://plus.maths.org/content/language-mathematics
