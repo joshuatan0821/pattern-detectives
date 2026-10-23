@@ -56,6 +56,9 @@ In line with the course policy on GenAI use: generative AI helped brainstorm pro
 
 ## References
 
-- Bataller, et al. (2019). *Mathematical ideas and tools for the modern world*. Vibal Group, Inc.
-- Devlin, K. (2000). Prologue: What is mathematics? In *The language of mathematics: Making the invisible visible* (pp. 1–12). W. H. Freeman and Co.
-- Stewart, I. (2017). *The beauty of numbers in nature*. MIT Press.
+- Stewart, I. (2017). The beauty of numbers in nature. MIT Press. https://mitpressbookstore.mit.edu/book/9780262534284 
+- Devlin, K. (2000). Prologue: What is mathematics? In The language of mathematics: Making the invisible visible (pp. 1-12). W. H. Freeman and Co. https://plus.maths.org/content/language-mathematics
+- Hales, T. C. (2001). The honeycomb conjecture. Discrete & Computational Geometry, 25(1), 1-22. https://doi.org/10.1007/s004540010071 
+- Knott, R. (n.d.). Fibonacci numbers and nature. University of Surrey. https://r-knott.surrey.ac.uk/Fibonacci/fibnat.html  
+
+
