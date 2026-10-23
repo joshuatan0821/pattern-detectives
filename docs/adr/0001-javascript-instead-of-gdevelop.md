@@ -1,0 +1,3 @@
+# Build the game in plain JavaScript instead of GDevelop
+
+The proposal named GDevelop, but we build the game in plain HTML, CSS, and JavaScript with no framework or build step. The game is mostly text, buttons, and images, which the browser handles natively. Our developer already codes in JavaScript. Plain-text source files track cleanly in git, which also gives us our dated record of the work. The result is served for free from GitHub Pages as a public link. We give up GDevelop's visual editor, which matters little because only one member builds the game. The change is reported in the Nov 10 progress report.
