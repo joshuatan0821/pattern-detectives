@@ -53,7 +53,7 @@ The same check runs automatically on every pull request.
 
 ## Use of generative AI
 
-In line with the course policy on GenAI use: an AI coding assistant helped draft these planning documents and set up this repository. All design decisions and mathematical content were reviewed and decided by the group.
+In line with the course policy on GenAI use: an AI coding assistant helped draft these planning documents. All design decisions and mathematical content were reviewed and decided by the group.
 
 ## References
 
