@@ -1,70 +1,70 @@
-# Writing Puzzles
+# Writing Steps
 
-The Puzzles live **only** in `game/data/room-1.json`, `room-2.json`, and `room-3.json`. The game reads those files directly, so what you write there is exactly what players see. Do not keep a second copy anywhere else (see [ADR 0002](../adr/0002-puzzles-live-only-in-json.md)).
+The Steps live **only** in `game/data/level-1.json`, `level-2.json`, `level-3.json`, and `conclusion.json`. The game reads those files directly, so what you write there is exactly what players see. Do not keep a second copy anywhere else (see [ADR 0002](../adr/0002-puzzles-live-only-in-json.md)).
 
 ## Topic map
 
-Every topic named in the proposal must appear somewhere: either as a Puzzle, or inside an Explanation or Hint.
-
-| Room | Puzzle | Main topic | Also taught here |
+| Level | Step | Topic | Also taught (in the Explanation) |
 | --- | --- | --- | --- |
-| 1 The Weaver's Hall | r1p1 | Fibonacci sequence (number patterns) | Golden ratio and Fibonacci in nature (Explanation) |
-| | r1p2 | Symmetry in a woven design (reflection, rotation, translation) | Symmetry in Filipino weaving (Explanation) |
-| | r1p3 | Which regular polygons tessellate | Tessellations in floors and weaving (Explanation) |
-| 2 The Vault of Symbols | r2p1 | Translating an English statement into symbols | Logical connectives ¬ ∧ ∨ → ↔ |
-| | r2p2 | Deciding if a quantified statement is true | Quantifiers ∀ ∃ |
-| | r2p3 | Intersection of two sets of clues | Sets and set operations |
-| 3 The Master Weaver's Study | r3p1 | Inductive or deductive argument | |
-| | r3p2 | Counterexample to "all prime numbers are odd" | Counterexamples disprove "for all" statements |
-| | r3p3 | Missing row of the p → q truth table | Conditional statements, truth tables |
-| | (all) | | Polya's four steps shape the Hints in Room 3 |
+| 1 The Garden | l1s1 | Reflection symmetry: complete the missing half of a butterfly wing | Line of symmetry; mirror images in living things |
+| | l1s2 | Rotational symmetry: the missing arm of a six-fold (60°) snowflake | 360° ÷ 6 = 60°; why ice crystals have six arms |
+| 2 The Beehive | l2s1 | Which regular polygon tiles a floor without gaps (triangle, square, hexagon; not pentagon) | Tessellation; interior angles |
+| | l2s2 | Why hexagons fit: three 120° corners make 360° | Honeycomb conjecture: hexagons divide space with the least wall (Hales, 2001) |
+| 3 The Sunflower Field | l3s1 | Count the spirals on a sunflower and find the next Fibonacci number | Fibonacci sequence; spirals in pinecones (Knott) |
+| | l3s2 | Ratios 8/5, 13/8, 21/13 approach about 1.618 | Golden ratio φ = (1 + √5) / 2; shells |
+| Conclusion | conclusion | What the three patterns have in common | Math as a science of patterns (Devlin, 2000) |
 
-Where a claim is about the real world, keep it to what the sources support: Fibonacci and the golden ratio are shown **in nature**, while symmetry and tessellation are shown **in Filipino woven designs**.
+Every topic named in the proposal is covered: number sequences, the Fibonacci sequence, the golden ratio, symmetry, and tessellations.
 
-## Puzzle format
-
-Each room file looks like this:
+## Level file format
 
 ```json
 {
-  "room": 1,
-  "name": "The Weaver's Hall",
-  "puzzles": [ ...three Puzzles... ]
+  "level": 1,
+  "name": "The Garden",
+  "setting": "Butterfly wings and snowflakes",
+  "steps": [ ...two Steps... ]
 }
 ```
 
-Each Puzzle has:
+`conclusion.json` has `"name": "Conclusion"` and a `steps` list holding a single Step with `"id": "conclusion"`.
+
+Each Step has:
 
 | Field | What to write |
 | --- | --- |
-| `id` | `r<room>p<number>`, e.g. `r1p1` |
-| `topic` | The main topic from the map above |
+| `id` | `l<level>s<step>`, e.g. `l1s1`; or `conclusion` |
+| `topic` | The topic from the map above |
 | `question` | What the player is asked |
-| `image` | Optional. A file in `game/assets/images/`, e.g. `"images/r1p2-design.svg"` |
-| `options` | 3 or 4 Options. Exactly one has `"correct": true`. Every other Option is a Distractor and needs a `whyWrong` |
+| `figure` | Optional. The Figure shown with the question: `{ "type": "<figure name>", ...settings }`. Joshua lists the available Figure types as he builds them |
+| `options` | Exactly **4** Options. Each has `text`, a `figure`, or both. Exactly one has `"correct": true`; every other Option is a Distractor and needs a `whyWrong` |
 | `hint` | One or two sentences that point the way without giving the answer away |
 | `explanation` | Why the correct Option is right, in a few sentences |
 
-Use Unicode for math symbols, not LaTeX: ¬ ∧ ∨ → ↔ ∀ ∃ ∈ ∉ ∩ ∪ ⊆ ∅ φ ≈ ≠ ≤ ≥ √.
+Use Unicode for math symbols, not LaTeX: ° × ÷ ≈ ≠ φ √ ½.
 
 ## A complete example
 
+This shows the format. Bryce writes and owns the real Steps.
+
 ```json
 {
-  "id": "r1p1",
+  "id": "l3s1",
   "topic": "Fibonacci sequence",
-  "question": "The first rows of the old pattern were woven with 1, 1, 2, 3, 5, and 8 threads. How many threads go in the next row?",
+  "question": "This sunflower has 21 spirals turning one way and 34 turning the other. Bigger sunflowers follow the same pattern. How many spirals would the next size up have?",
+  "figure": { "type": "sunflower", "spiralsA": 21, "spiralsB": 34 },
   "options": [
-    { "text": "13", "correct": true },
-    { "text": "16", "whyWrong": "16 doubles the last row (8 × 2). The pattern adds the two rows before instead." },
-    { "text": "11", "whyWrong": "11 adds 3 to the last row, as if the jump from 5 to 8 repeats. The jumps are not constant." }
+    { "text": "55", "correct": true },
+    { "text": "68", "whyWrong": "68 doubles 34. The pattern adds the two numbers before instead." },
+    { "text": "47", "whyWrong": "47 adds 13 to 34, as if the jump from 21 to 34 repeats. The jumps grow each time." },
+    { "text": "35", "whyWrong": "35 counts up by one, as if the spirals were the counting numbers. They grow much faster." }
   ],
-  "hint": "Look at how each row relates to the two rows just before it.",
-  "explanation": "Each number is the sum of the two before it: 5 + 8 = 13. This is the Fibonacci sequence. Divide each term by the one before (8 ÷ 5 = 1.6, 13 ÷ 8 = 1.625) and the ratios get closer and closer to the golden ratio φ ≈ 1.618, the same ratio seen in the spirals of sunflower seeds and pinecones."
+  "hint": "Look at how each number in 1, 1, 2, 3, 5, 8, 13, 21, 34 relates to the two before it.",
+  "explanation": "Each Fibonacci number is the sum of the two before it, so 21 + 34 = 55. Sunflower spirals almost always come in neighbouring Fibonacci numbers, such as 21 and 34, or 34 and 55. The same thing happens in pinecones and pineapples."
 }
 ```
 
 ## Checking
 
-1. **Format check**: run `node scripts/check-puzzles.mjs`, or just open a pull request, where it runs automatically. It catches missing fields, a missing comma, or zero/two correct Options. It does **not** check the mathematics.
-2. **Mathematical check**: every Puzzle pull request needs approval from a second member, who re-solves each Puzzle and reads every Distractor note and Explanation against the course materials.
+1. **Format check**: run `node scripts/check-puzzles.mjs`, or just open a pull request, where it runs automatically. It catches missing fields, a missing comma, or not exactly one correct Option. It does **not** check the mathematics.
+2. **Mathematical check**: every Step pull request needs approval from a second member, who re-solves each Step and reads every `whyWrong`, Hint, and Explanation against the course materials. Bryce also checks that each Figure's settings give a mathematically exact pattern.

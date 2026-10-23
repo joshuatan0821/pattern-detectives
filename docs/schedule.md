@@ -5,29 +5,35 @@ Each item is tracked as a GitHub issue under one of two milestones: **Progress r
 | Dates (2026) | Activity | Owner |
 | --- | --- | --- |
 | Oct 23 | Submit project proposal | All |
-| Oct 24 – 30 | Write and check all nine Puzzles (room-1/2/3.json) | Bryce writes, another member approves |
-| Oct 24 – 30 | Storyboard: intro, door lines, ending, screen flow | All |
-| Oct 24 – 30 | *Module 4 exam on Oct 30, so the load is kept light* | |
-| Oct 31 – Nov 6 | Game shell: screens, Puzzle cycle, saved progress, audio | Joshua |
-| Oct 31 – Nov 6 | Build Room 1 | Joshua |
+| Oct 24 – 30 | Content review; write and check all three Puzzles and the Conclusion | Bryce writes, another member approves |
+| Oct 24 – 30 | Storyboard: intro, Level intros, ending, screen flow (Canva or any drawing app) | All |
+| Oct 24 – 30 | Set up project files and online hosting (GitHub Pages) | Joshua |
+| Oct 31 – Nov 6 | Game structure: Step screen, Hints, Explanation screen | Joshua |
+| Oct 31 – Nov 6 | Build Level 1, The Garden | Joshua |
 | Oct 31 – Nov 6 | Start art and audio | Adrian |
-| Nov 7 – 9 | Build Room 2 | Joshua |
+| Nov 7 – 9 | Build Level 2, The Beehive | Joshua |
 | Nov 7 – 9 | Prepare progress report | Bryce |
-| **Nov 10** | **Submit progress report** (mention the switch from GDevelop to JavaScript, see ADR 0001) | Bryce |
-| Nov 11 – 14 | Build Room 3, finish the ending | Joshua |
+| **Nov 10** | **Submit progress report** | Bryce |
+| Nov 11 – 14 | Build Level 3, The Sunflower Field, and the Conclusion; add remaining Hints and Explanations | Joshua |
 | Nov 11 – 14 | Finish art and audio | Adrian |
-| Nov 15 – 17 | Playtest with at least five classmates; fix what they find | All |
-| Nov 18 – 19 | Final mathematical check (each member re-solves every Puzzle) | Bryce leads, all |
-| Nov 18 – 19 | One-page write-up of the mathematics | Bryce |
-| Nov 18 – 19 | Documentation, presentation slides, rehearsal | Adrian leads, all |
-| **Nov 20** | **Submit the game and all deliverables; present** | All |
-| Nov 27 | Alternate presentation date, if scheduled | All |
+| Nov 15 – 17 | Playtest with at least three classmates (aim for five, each member brings at least one); fix what they find | All |
+| Nov 18 – 19 | Final mathematical check (each member re-solves every Step) | Bryce leads, all |
+| Nov 18 – 19 | One-page summary of the mathematics | Bryce |
+| Nov 18 – 19 | Documentation, peer evaluations, proofs of collaboration, slides, rehearsal | Adrian leads, all |
+| **Nov 20** | **Submit the game and all deliverables**; present if our slot is this day | All |
+| Nov 27 | Present if our slot is this day | All |
+
+## Progress report contents (Nov 10)
+
+- Draft of the finished set of Puzzles (all Steps and the Conclusion)
+- A playable Level 1, if possible
+- A summary and full documentation of work done and work remaining
 
 ## Deliverables checklist
 
 - [ ] Playable game at a public link (GitHub Pages)
 - [ ] Progress report (Nov 10)
 - [ ] Presentation with live demo (Nov 20 or 27)
-- [ ] Documentation: dated screenshots, time-lapse video, meeting records
-- [ ] One-page write-up of the mathematics
+- [ ] Documentation: dated screenshots, work-in-progress files, meeting records, time-lapse video if possible
+- [ ] One-page summary of the mathematics and how each concept is used in the game
 - [ ] Peer evaluation forms and proofs of collaboration

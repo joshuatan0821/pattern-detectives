@@ -6,20 +6,20 @@ Everything goes through this repo. The history of commits, pull requests, and is
 
 Bryce and Adrian can do everything on the GitHub website:
 
-1. Open the file you want to change (e.g. `game/data/room-1.json`) and click the pencil icon.
+1. Open the file you want to change (e.g. `game/data/level-1.json`) and click the pencil icon.
 2. Make your changes.
-3. Click **Commit changes…**, choose **Create a new branch and start a pull request**, and give it a short name like `room-1-puzzles`.
+3. Click **Commit changes…**, choose **Create a new branch and start a pull request**, and give it a short name like `level-1-steps`.
 4. On the next page, click **Create pull request**.
 
 To add images or audio, open the folder (e.g. `game/assets/images/`), click **Add file → Upload files**, and again choose **Create a new branch and start a pull request**.
 
 ## Reviews
 
-- **Puzzles** (`game/data/*.json`): a pull request needs approval from a member who did not write it. That member re-solves every Puzzle and reads every `whyWrong`, Hint, and Explanation against the course materials. This is the two-member mathematical check from our proposal.
-- **Game code**: Joshua may merge his own pull requests, but should ask for a quick look when a change affects how Puzzles appear.
-- **Art and audio**: Adrian merges their own; any file not 100% ours needs a line in `game/assets/CREDITS.md` first.
+- **Steps** (`game/data/*.json`): a pull request needs approval from a member who did not write it. That member re-solves every Step and reads every `whyWrong`, Hint, and Explanation against the course materials. This is the two-member mathematical check from our proposal.
+- **Game code**: Joshua may merge his own pull requests, but should ask Bryce to check any change to how a Figure is drawn, since the Figures must be mathematically exact.
+- **Art and audio**: Adrian merges his own; any file not 100% ours needs a line in `game/assets/CREDITS.md` first.
 
-A green check on a pull request means the Puzzle files are well-formed. It does not mean the mathematics is right; that's what the human review is for.
+A green check on a pull request means the Step files are well-formed. It does not mean the mathematics is right; that's what the human review is for.
 
 ## Issues and milestones
 
@@ -29,4 +29,4 @@ A green check on a pull request means the Puzzle files are well-formed. It does 
 
 ## Words
 
-Use the terms in [GLOSSARY.md](GLOSSARY.md): Room (not "level"), Puzzle, Option, Distractor, Hint, Explanation.
+Use the terms in [GLOSSARY.md](GLOSSARY.md): Level (not "room"), Puzzle, Step, Conclusion, Option, Distractor, Hint, Explanation, Figure, Score.

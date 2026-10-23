@@ -1,62 +1,71 @@
-// Checks that every Puzzle in game/data/room-N.json is complete.
+// Checks that every Step in game/data/level-N.json and conclusion.json is complete.
 // It checks structure only; the mathematics still needs a human review.
 // Usage: node scripts/check-puzzles.mjs
 
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const gameDir = join(root, "game");
-const PUZZLES_PER_ROOM = 3;
+const OPTIONS_PER_STEP = 4;
+
+const files = [
+  { file: "game/data/level-1.json", level: 1, stepCount: 2, stepId: (n) => `l1s${n}` },
+  { file: "game/data/level-2.json", level: 2, stepCount: 2, stepId: (n) => `l2s${n}` },
+  { file: "game/data/level-3.json", level: 3, stepCount: 2, stepId: (n) => `l3s${n}` },
+  { file: "game/data/conclusion.json", level: null, stepCount: 1, stepId: () => "conclusion" },
+];
 
 const errors = [];
 const warnings = [];
 
 const isText = (value) => typeof value === "string" && value.trim() !== "";
 
-for (const roomNumber of [1, 2, 3]) {
-  const file = `game/data/room-${roomNumber}.json`;
-  let room;
+function checkFigure(figure, where) {
+  if (figure === undefined || figure === null) return;
+  if (typeof figure !== "object" || !isText(figure.type)) {
+    errors.push(`${where}: "figure" needs a "type"`);
+  }
+}
+
+for (const { file, level, stepCount, stepId } of files) {
+  let data;
   try {
-    room = JSON.parse(readFileSync(join(root, file), "utf8"));
+    data = JSON.parse(readFileSync(join(root, file), "utf8"));
   } catch (err) {
     errors.push(`${file}: cannot be read as JSON (${err.message})`);
     continue;
   }
 
-  if (room.room !== roomNumber) errors.push(`${file}: "room" should be ${roomNumber}`);
-  if (!isText(room.name)) errors.push(`${file}: "name" is missing`);
-  if (!Array.isArray(room.puzzles)) {
-    errors.push(`${file}: "puzzles" should be a list`);
+  if (level !== null) {
+    if (data.level !== level) errors.push(`${file}: "level" should be ${level}`);
+    if (!isText(data.setting)) errors.push(`${file}: "setting" is missing`);
+  }
+  if (!isText(data.name)) errors.push(`${file}: "name" is missing`);
+  if (!Array.isArray(data.steps)) {
+    errors.push(`${file}: "steps" should be a list`);
     continue;
   }
 
-  if (room.puzzles.length > PUZZLES_PER_ROOM) {
-    errors.push(`${file}: has ${room.puzzles.length} Puzzles; a Room has ${PUZZLES_PER_ROOM}`);
-  } else if (room.puzzles.length < PUZZLES_PER_ROOM) {
-    warnings.push(`${file}: has ${room.puzzles.length} of ${PUZZLES_PER_ROOM} Puzzles so far`);
+  if (data.steps.length > stepCount) {
+    errors.push(`${file}: has ${data.steps.length} Steps; expected ${stepCount}`);
+  } else if (data.steps.length < stepCount) {
+    warnings.push(`${file}: has ${data.steps.length} of ${stepCount} Steps so far`);
   }
 
-  room.puzzles.forEach((puzzle, index) => {
-    const expectedId = `r${roomNumber}p${index + 1}`;
-    const where = `${file} ${isText(puzzle.id) ? puzzle.id : `Puzzle ${index + 1}`}`;
+  data.steps.forEach((step, index) => {
+    const expectedId = stepId(index + 1);
+    const where = `${file} ${isText(step.id) ? step.id : `Step ${index + 1}`}`;
 
-    if (puzzle.id !== expectedId) errors.push(`${where}: "id" should be "${expectedId}"`);
+    if (step.id !== expectedId) errors.push(`${where}: "id" should be "${expectedId}"`);
     for (const field of ["topic", "question", "hint", "explanation"]) {
-      if (!isText(puzzle[field])) errors.push(`${where}: "${field}" is missing`);
+      if (!isText(step[field])) errors.push(`${where}: "${field}" is missing`);
     }
+    checkFigure(step.figure, where);
 
-    if (puzzle.image !== undefined && puzzle.image !== null) {
-      if (!isText(puzzle.image)) errors.push(`${where}: "image" should be a file name`);
-      else if (!existsSync(join(gameDir, "assets", puzzle.image))) {
-        errors.push(`${where}: image "${puzzle.image}" not found in game/assets/`);
-      }
-    }
-
-    const options = puzzle.options;
-    if (!Array.isArray(options) || options.length < 3 || options.length > 4) {
-      errors.push(`${where}: needs 3 or 4 Options`);
+    const options = step.options;
+    if (!Array.isArray(options) || options.length !== OPTIONS_PER_STEP) {
+      errors.push(`${where}: needs exactly ${OPTIONS_PER_STEP} Options`);
       return;
     }
 
@@ -66,9 +75,14 @@ for (const roomNumber of [1, 2, 3]) {
     const texts = new Set();
     options.forEach((option, optionIndex) => {
       const label = `${where} Option ${optionIndex + 1}`;
-      if (!isText(option.text)) errors.push(`${label}: "text" is missing`);
-      else if (texts.has(option.text.trim())) errors.push(`${label}: same text as another Option`);
-      else texts.add(option.text.trim());
+      const hasFigure = option.figure !== undefined && option.figure !== null;
+
+      if (!isText(option.text) && !hasFigure) errors.push(`${label}: needs "text", a "figure", or both`);
+      if (isText(option.text)) {
+        if (texts.has(option.text.trim())) errors.push(`${label}: same text as another Option`);
+        texts.add(option.text.trim());
+      }
+      checkFigure(option.figure, label);
 
       if (option.correct === true) {
         if (option.whyWrong !== undefined) errors.push(`${label}: the correct Option should not have "whyWrong"`);
@@ -86,4 +100,4 @@ if (errors.length > 0) {
   console.log(`\n${errors.length} problem(s) found.`);
   process.exit(1);
 }
-console.log("All Puzzle files are well-formed.");
+console.log("All Step files are well-formed.");
