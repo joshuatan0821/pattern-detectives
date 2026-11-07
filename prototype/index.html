@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pattern Detectives (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #283040; --frame: #384858; --paper: #f8f8f0; --hp: #58d080; --gold: #f0b830; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+         gap: 10px; padding: 16px; background: #1f2633; color: var(--ink); font: 19px/1.35 "Pixelify Sans", monospace; }
+  #screen { position: relative; width: 100%; max-width: 780px; aspect-ratio: 3 / 2; background: #000; overflow: hidden;
+            border: 6px solid #4a5568; border-radius: 12px; }
+  #map { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  #battle, #page { position: absolute; inset: 0; overflow: auto; }
+  button { font: inherit; cursor: pointer; color: var(--ink); background: var(--paper); border: 3px solid var(--frame);
+           border-radius: 8px; padding: 6px 16px; }
+  button:hover:not(:disabled) { background: #fff8d0; }
+  .proto { color: #9aa5b8; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* text box */
+  #box { position: absolute; left: 8px; right: 8px; bottom: 8px; min-height: 92px; z-index: 5; cursor: pointer;
+         background: var(--paper); border: 4px solid var(--frame); border-radius: 10px; box-shadow: inset 0 0 0 3px #a8c0d8;
+         padding: 12px 40px 12px 18px; font-size: 21px; }
+  #box p { margin: 0; }
+  #box .more { position: absolute; right: 16px; bottom: 8px; color: #d04030; animation: blink .8s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* map HUD */
+  #hud { position: absolute; top: 8px; right: 8px; display: flex; gap: 8px; align-items: center; z-index: 4; }
+  #hud .badges { background: var(--paper); border: 3px solid var(--frame); border-radius: 8px; padding: 2px 10px; }
+
+  /* battle */
+  .battle { display: flex; flex-direction: column; height: 100%; }
+  .field { position: relative; flex: 1; min-height: 150px;
+           background: linear-gradient(#c8e8f8 0 52%, #a8d880 52%); }
+  .field::before, .field::after { content: ""; position: absolute; border-radius: 50%; background: #88c060; }
+  .field::before { right: 8%; top: 52%; width: 38%; height: 14%; }
+  .field::after { left: 3%; bottom: -4%; width: 34%; height: 16%; }
+  .tag { position: absolute; z-index: 1; background: #f8f8e0; border: 3px solid var(--frame); border-radius: 10px 0 10px 0;
+         padding: 4px 12px; font-size: 17px; min-width: 190px; }
+  .tag b { display: block; }
+  .tag small { color: #6a7080; }
+  .foe-tag { left: 14px; top: 12px; }
+  .me-tag { right: 14px; bottom: 10px; }
+  .hp { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .hp span { background: #f0a030; color: #fff; padding: 0 4px; border-radius: 3px; }
+  .bar { flex: 1; height: 9px; background: #506070; border-radius: 5px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--hp); transition: width .4s, background .4s; }
+  canvas.foe { position: absolute; z-index: 1; right: 10%; top: 4%; height: 60%; width: auto; }
+  canvas.me { position: absolute; z-index: 1; left: 10%; bottom: 2%; height: 42%; width: auto; image-rendering: pixelated; }
+  .panel { background: var(--frame); padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+  .q { background: var(--paper); border-radius: 8px; padding: 8px 12px; margin: 0; font-size: 18px; }
+  .sub { color: #ffe68a; margin: 0 4px; font-size: 16px; }
+  .sub:empty { display: none; }
+  .moves { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .moves button { display: flex; align-items: center; gap: 8px; padding: 4px 10px; text-align: left; font-size: 17px; }
+  .moves button::before { content: "▶"; color: transparent; }
+  .moves button:hover:not(:disabled)::before { color: #d04030; }
+  .moves canvas { height: 54px; width: auto; }
+  .moves button:disabled { opacity: .35; text-decoration: line-through; cursor: default; }
+
+  /* pages: title, intro, notebook, ending */
+  .page { min-height: 100%; padding: 26px 32px; display: flex; flex-direction: column; gap: 12px; }
+  .title { background: linear-gradient(#78c8f0, #f8f0c0); align-items: center; justify-content: center; text-align: center; }
+  .title h1 { font-size: 58px; margin: 0; color: #f8d030; text-shadow: 3px 3px 0 #2850a0, -2px -2px 0 #2850a0, 2px -2px 0 #2850a0, -2px 2px 0 #2850a0; }
+  .lab { background: linear-gradient(#e8e0d0 0 70%, #c8b898 70%); align-items: center; }
+  .lab > canvas { height: 38%; min-height: 96px; max-height: 190px; image-rendering: pixelated; margin-top: 3%; }
+  .lab form { background: var(--paper); border: 4px solid var(--frame); border-radius: 10px; padding: 12px 16px; display: flex; gap: 10px; align-items: center; }
+  .chars { display: flex; gap: 14px; }
+  .chars button { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; }
+  .chars canvas { height: 72px; image-rendering: pixelated; }
+  .note { background: #f7f1e3; background-image: repeating-linear-gradient(transparent 0 29px, rgba(100, 140, 190, .15) 29px 30px); }
+  .note h2 { margin: 0; font-size: 34px; }
+  .note p { margin: 0; }
+  .note .topic { color: #3f7d5a; }
+  .note .wrongnote { border-left: 4px solid #c0503a; padding-left: 12px; }
+  .note .entry { border-bottom: 2px dashed #c9bfa8; padding-bottom: 10px; }
+  .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* touch controls */
+  #pad { display: none; gap: 24px; align-items: center; }
+  #pad .dpad { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 48px); gap: 2px; }
+  #pad button { padding: 0; font-size: 20px; }
+  #pad .a { width: 64px; height: 64px; border-radius: 50%; background: #d04030; color: #fff; }
+  @media (hover: none) { #pad { display: flex; } }
+  @media (max-width: 600px) { body { font-size: 15px; } #box { font-size: 15px; min-height: 64px; } .tag { min-width: 130px; font-size: 13px; }
+    .q, .moves button { font-size: 13px; } .title h1 { font-size: 34px; } }
+</style>
+</head>
+<body>
+<div id="screen">
+  <canvas id="map" width="240" height="160"></canvas>
+  <div id="hud" hidden><span class="badges"></span><button id="nbBtn">Notebook</button></div>
+  <div id="battle" hidden></div>
+  <div id="page" hidden></div>
+  <div id="box" hidden><p></p><span class="more">▼</span></div>
+</div>
+<div id="pad">
+  <div class="dpad"><span></span><button data-k="ArrowUp">▲</button><span></span>
+    <button data-k="ArrowLeft">◀</button><span></span><button data-k="ArrowRight">▶</button>
+    <span></span><button data-k="ArrowDown">▼</button><span></span></div>
+  <button class="a" data-k="Enter">A</button>
+</div>
+<div class="proto" style="text-transform: none; letter-spacing: 0">Prototype · placeholder questions and art · Arrow keys/WASD to walk, Enter/Space to talk</div>
+<script>
+// PROTOTYPE: placeholder Steps written for this mockup. The real Steps live in
+// game/data/*.json and are written and checked by Bryce (see ADR 0002).
+const LEVELS = [
+  { name: "The Garden", steps: [
+      { foe: "BUTTERFLY", topic: "Reflection symmetry",
+        question: "Half of this butterfly is missing. Which picture completes it?",
+        figure: { type: "butterfly", right: "missing" },
+        options: [
+          { figure: { type: "butterfly", right: "mirror" }, text: "A", correct: true },
+          { figure: { type: "butterfly", right: "copy" }, text: "B", whyWrong: "B slides the same wing over without flipping it. That's a translation, not a reflection." },
+          { figure: { type: "butterfly", right: "rotate" }, text: "C", whyWrong: "C turns the wing upside down (a 180° rotation). A mirror flips left and right only." },
+          { figure: { type: "butterfly", right: "spots" }, text: "D", whyWrong: "D has the right shape, but its spots don't match the other side." },
+        ],
+        hint: "Imagine folding the page along the body. Both halves should land on each other exactly.",
+        explanation: "A butterfly has reflection symmetry: the body is a line of symmetry, and each wing is the mirror image of the other. Every point on the left has a matching point the same distance away on the right." },
+      { foe: "SNOWFLAKE", topic: "Rotational symmetry",
+        question: "This snowflake lost an arm. The arms are spaced evenly. How many degrees apart are they?",
+        figure: { type: "snowflake", arms: 6, missing: 1 },
+        options: [
+          { text: "60°", correct: true },
+          { text: "72°", whyWrong: "72° = 360° ÷ 5. That counts only the five arms you can see, not the missing one." },
+          { text: "90°", whyWrong: "90° = 360° ÷ 4 would give a snowflake with four arms." },
+          { text: "45°", whyWrong: "45° = 360° ÷ 8 would give eight arms." },
+        ],
+        hint: "A full turn is 360°. How many arms would a complete snowflake have?",
+        explanation: "A complete snowflake has 6 arms, so the arms are 360° ÷ 6 = 60° apart. Turning it by 60° lands it on itself: six-fold rotational symmetry. Ice crystals grow this way because water molecules lock into a hexagonal pattern." },
+    ] },
+  { name: "The Beehive", steps: [
+      { foe: "FLOOR GAP", topic: "Tessellations",
+        question: "Copies of each tile are placed around one corner. Which regular polygon fills the space with no gap?",
+        figure: { type: "tiles", sides: 5 },
+        options: [
+          { figure: { type: "tiles", sides: 6 }, text: "Hexagon", correct: true },
+          { figure: { type: "tiles", sides: 5 }, text: "Pentagon", whyWrong: "Each pentagon corner is 108°. Three make 324°, leaving a 36° gap." },
+          { figure: { type: "tiles", sides: 8 }, text: "Octagon", whyWrong: "Each octagon corner is 135°. Two make 270°, leaving a 90° gap." },
+          { figure: { type: "tiles", sides: 7 }, text: "Heptagon", whyWrong: "Each heptagon corner is about 128.6°. Two leave a gap and three overlap." },
+        ],
+        hint: "Tiles meeting at a point must add up to exactly 360°.",
+        explanation: "A regular polygon tiles a floor by itself only if its corner angle divides 360° evenly. That works for the triangle (60°), the square (90°) and the hexagon (120°), and for no other regular polygon." },
+      { foe: "HONEYCOMB", topic: "Why hexagons tile",
+        question: "Why do hexagons fit together with no gaps?",
+        figure: { type: "honeycomb" },
+        options: [
+          { text: "Three 120° corners make exactly 360°", correct: true },
+          { text: "Six sides × 60° = 360°", whyWrong: "A hexagon's corner is 120°, not 60°. And it's the corners meeting at a point that matter, not the number of sides." },
+          { text: "Any shape with an even number of sides fits", whyWrong: "Counterexample: the octagon has 8 sides but leaves gaps." },
+          { text: "Bees bend the walls until they fit", whyWrong: "Flat regular hexagons tile perfectly with no bending. The angles alone explain it." },
+        ],
+        hint: "Look at the marked point where three cells meet. What is each corner's angle?",
+        explanation: "Each corner of a regular hexagon is 120°, and three meet at every point: 3 × 120° = 360°. Hexagons also use the least wall to divide a surface into equal cells (Hales' honeycomb conjecture, proved in 2001), which saves the bees wax." },
+    ] },
+  { name: "The Sunflower Field", steps: [
+      { foe: "SUNFLOWER", topic: "Fibonacci sequence",
+        question: "This sunflower has 21 spirals one way and 34 the other. How many spirals would the next size up have?",
+        figure: { type: "sunflower" },
+        options: [
+          { text: "55", correct: true },
+          { text: "68", whyWrong: "68 doubles 34. The pattern adds the two numbers before instead." },
+          { text: "47", whyWrong: "47 adds 13 to 34, as if the jump from 21 to 34 repeats. The jumps grow each time." },
+          { text: "35", whyWrong: "35 counts up by one. The spiral counts grow much faster." },
+        ],
+        hint: "Look at how each number in 1, 1, 2, 3, 5, 8, 13, 21, 34 relates to the two before it.",
+        explanation: "Each Fibonacci number is the sum of the two before it, so 21 + 34 = 55. Sunflower spirals almost always come in neighbouring Fibonacci numbers, as do pinecones and pineapples." },
+      { foe: "GOLDEN RATIO", topic: "The golden ratio",
+        question: "Divide each Fibonacci number by the one before it. What do the answers get closer to?",
+        figure: { type: "ratios" },
+        options: [
+          { text: "About 1.618", correct: true },
+          { text: "2", whyWrong: "Each number is less than double the one before (34 < 2 × 21), so the ratio stays below 2." },
+          { text: "1.5", whyWrong: "3/2 = 1.5 is an early ratio, but later ones settle above it: 1.6, 1.625, 1.615…" },
+          { text: "They keep growing forever", whyWrong: "The numbers grow, but their ratio settles down, bouncing closer and closer to one number." },
+        ],
+        hint: "Work out 34 ÷ 21 and compare it with the ratios already shown.",
+        explanation: "The ratios 8/5 = 1.6, 13/8 = 1.625, 21/13 ≈ 1.615, 34/21 ≈ 1.619 approach the golden ratio φ = (1 + √5) / 2 ≈ 1.618. It shows up in the growth of shells and seed heads." },
+    ] },
+  { name: "Field Station", steps: [
+      { foe: "SIR DURWIN", appear: "SIR DURWIN wants to test you!", topic: "Math as a science of patterns",
+        question: "What do the butterfly, the honeycomb, and the sunflower have in common?",
+        figure: { type: "trio" },
+        options: [
+          { text: "Each follows a rule math can describe", correct: true },
+          { text: "They are all made by insects", whyWrong: "Sunflowers and snowflakes aren't made by insects. The link is the pattern, not the maker." },
+          { text: "They are all random", whyWrong: "Each one follows an exact rule: reflection, 120° corners, or adding the two numbers before." },
+          { text: "They all have exactly six parts", whyWrong: "Only the snowflake and the hexagon involve six. A butterfly has two halves; a sunflower has 21, 34, 55… spirals." },
+        ],
+        hint: "Think about what you did at each site: you found a rule.",
+        explanation: "Symmetry, tessellation, and the Fibonacci numbers are all rules that can be written in mathematics. As Devlin (2000) puts it, mathematics is the science of patterns." },
+    ] },
+];
+const BADGES = ["Symmetry Badge", "Tiling Badge", "Fibonacci Badge"];
+const MAX_HP = 3;
+const DURWIN_TALK = [
+  ["SIR DURWIN: Two students are waiting by the Garden, up the path to the west.", "SIR DURWIN: Beat them both in a pattern battle to earn the Symmetry Badge!"],
+  ["SIR DURWIN: Splendid work! Two more students wait by the Beehive, straight north."],
+  ["SIR DURWIN: Two badges already! The last students are by the Sunflower Field to the north-east."],
+];
+// Each student battles you with one Step. Beat both students at a site to earn its badge.
+const STUDENTS = {
+  "2,2": { name: "MIA", level: 0, step: 0, look: { hat: "#e8a030", shirt: "#e070a0", pants: "#404858" } },
+  "4,2": { name: "LEO", level: 0, step: 1, look: { hat: "#402818", shirt: "#50a070", pants: "#303840" } },
+  "7,2": { name: "ANA", level: 1, step: 0, look: { hat: "#202020", shirt: "#f0d040", pants: "#5a4630" } },
+  "9,2": { name: "RAF", level: 1, step: 1, look: { hat: "#704020", shirt: "#d05030", pants: "#303840" } },
+  "12,1": { name: "JOY", level: 2, step: 0, look: { hat: "#f0d060", shirt: "#60a0e0", pants: "#404858" } },
+  "12,2": { name: "KIT", level: 2, step: 1, look: { hat: "#303030", shirt: "#a060c0", pants: "#5a4630" } },
+};
+const CHARS = {
+  CHIPPY: { hat: "#48a050", shirt: "#f08030", pants: "#3a3a48" },
+  BRYCE: { hat: "#3a2a20", shirt: "#3878c8", pants: "#5a4630" },
+  JOSHUA: { hat: "#181818", shirt: "#c03838", pants: "#303848" },
+};
+const player = () => CHARS[S.name] || CHARS.CHIPPY;
+const NPC_TALK = {
+  "2,4": ["GIRL: I saw a butterfly that looked the same on both sides. Weird, right?"],
+  "10,4": ["BEEKEEPER: My bees never waste wax. Something about their corners, I think..."],
+};
+
+// 15 × 10 tiles of 16 px = 240 × 160, the GBA screen size.
+// T tree · . grass , tall grass = path · L lab · D Sir Durwin · N villager · P student · G/H/S the three sites
+const MAP = [
+  "TTTTTTTTTTTTTTT",
+  "T..G....H...PST",
+  "T.P=P..P=P..P=T",
+  "T..===========T",
+  "T.N.....=.N...T",
+  "T,,,....=..,,,T",
+  "T,,,....=..,,,T",
+  "T..LL...=.....T",
+  "T..LLD===.....T",
+  "TTTTTTTTTTTTTTT",
+];
+const TILE = 16;
+const DURWIN = { hat: "#b8b8c0", shirt: "#f8f8f8", pants: "#404858", glasses: true };
+const NPCS = { "2,4": { hat: "#8048b0", shirt: "#e05050", pants: "#404040" }, "10,4": { hat: "#303030", shirt: "#f0b030", pants: "#604020" } };
+
+// ---------- pixel sprites ----------
+function px(c, col, x, y, w, h) { c.fillStyle = col; c.fillRect(x, y, w, h); }
+function drawPerson(c, x, y, p) {
+  px(c, p.hat, x + 4, y + 1, 8, 3); px(c, p.hat, x + 3, y + 3, 10, 1);
+  px(c, "#f8c8a0", x + 5, y + 4, 6, 5);
+  if (p.glasses) px(c, "#202830", x + 5, y + 6, 6, 1);
+  else { px(c, "#202830", x + 6, y + 6, 1, 1); px(c, "#202830", x + 9, y + 6, 1, 1); }
+  px(c, p.shirt, x + 4, y + 9, 8, 4); px(c, "#f8c8a0", x + 3, y + 9, 1, 3); px(c, "#f8c8a0", x + 12, y + 9, 1, 3);
+  px(c, p.pants, x + 5, y + 13, 2, 3); px(c, p.pants, x + 9, y + 13, 2, 3);
+  if (p.shirt === "#f8f8f8") { px(c, "#a0a8b8", x + 4, y + 9, 1, 4); px(c, "#a0a8b8", x + 11, y + 9, 1, 4); }
+}
+function drawTile(c, t, X, Y, x, y) {
+  const ground = t === "=" || t === "D" ? "path" : t === "," ? "tall" : "grass";
+  if (ground === "path") { px(c, "#e8d4a0", X, Y, 16, 16); px(c, "#d4bc84", X + 3, Y + 5, 2, 1); px(c, "#d4bc84", X + 11, Y + 11, 2, 1); }
+  else if (ground === "tall") { px(c, "#68b048", X, Y, 16, 16); for (const [a, b] of [[2, 3], [9, 2], [5, 9], [12, 10]]) { px(c, "#3f8a30", X + a, Y + b, 1, 4); px(c, "#3f8a30", X + a + 2, Y + b, 1, 4); } }
+  else { px(c, "#88d070", X, Y, 16, 16); px(c, "#70b858", X + 3, Y + 4, 2, 1); px(c, "#70b858", X + 11, Y + 9, 2, 1); px(c, "#70b858", X + 6, Y + 13, 2, 1); }
+  if (t === "T") {
+    px(c, "#6b4a2a", X + 6, Y + 11, 4, 5);
+    c.fillStyle = "#2f7d3a"; c.beginPath(); c.arc(X + 8, Y + 7, 7, 0, 7); c.fill();
+    px(c, "#48a050", X + 4, Y + 3, 3, 2);
+  }
+  const site = "GHS".indexOf(t);
+  if (site >= 0) {
+    if (t === "G") for (const [a, b, col] of [[3, 3, "#f080a0"], [10, 4, "#fff"], [6, 10, "#f0d040"], [12, 11, "#f080a0"]]) { px(c, col, X + a - 1, Y + b, 3, 1); px(c, col, X + a, Y + b - 1, 1, 3); }
+    if (t === "H") { c.fillStyle = "#e8b830"; c.beginPath(); c.ellipse(X + 8, Y + 9, 6, 6, 0, 0, 7); c.fill(); px(c, "#a87818", X + 3, Y + 7, 10, 1); px(c, "#a87818", X + 3, Y + 11, 10, 1); px(c, "#402810", X + 7, Y + 12, 2, 2); }
+    if (t === "S") { px(c, "#3f8a30", X + 7, Y + 8, 2, 8); c.fillStyle = "#f8d030"; c.beginPath(); c.arc(X + 8, Y + 6, 5, 0, 7); c.fill(); c.fillStyle = "#6b3a1a"; c.beginPath(); c.arc(X + 8, Y + 6, 2, 0, 7); c.fill(); }
+    if (site > S.badges) { c.fillStyle = "rgba(20,30,40,.45)"; c.fillRect(X, Y, 16, 16); px(c, "#c0c8d0", X + 5, Y + 7, 6, 6); px(c, "#c0c8d0", X + 6, Y + 4, 1, 3); px(c, "#c0c8d0", X + 9, Y + 4, 1, 3); px(c, "#c0c8d0", X + 6, Y + 4, 4, 1); }
+    if (site < S.badges) { px(c, "#f8d030", X + 12, Y + 1, 3, 3); }
+  }
+  if (t === "D") drawPerson(c, X, Y, DURWIN);
+  if (t === "N") drawPerson(c, X, Y, NPCS[`${x},${y}`]);
+  if (t === "P") { const s = STUDENTS[`${x},${y}`]; drawPerson(c, X, Y, s.look); if (beaten(s.level, s.step)) px(c, "#f8d030", X + 12, Y, 3, 3); }
+}
+function drawLab(c, X, Y) {
+  px(c, "#c04830", X - 1, Y + 1, 34, 10); px(c, "#e06848", X - 1, Y + 1, 34, 2);
+  px(c, "#f0f0e8", X, Y + 11, 32, 21); px(c, "#78b8e8", X + 4, Y + 15, 6, 5); px(c, "#78b8e8", X + 22, Y + 15, 6, 5);
+  px(c, "#6b4a2a", X + 13, Y + 22, 6, 10);
+}
+
+// ---------- math figures (drawn from exact rules) ----------
+const COL = { ink: "#2f2a24", wing: "#e07a3f", gold: "#d39b2a", wax: "#f0c75e", seed: "#5b3a1e", ice: "#4c7fb0" };
+function wingPath(ctx, altSpots) { // left wing, body at x = 0
+  ctx.beginPath();
+  ctx.moveTo(0, -5); ctx.bezierCurveTo(-30, -75, -100, -80, -92, -25); ctx.bezierCurveTo(-88, 2, -40, 6, 0, 5);
+  ctx.moveTo(0, 5); ctx.bezierCurveTo(-50, 10, -78, 58, -46, 66); ctx.bezierCurveTo(-24, 72, -8, 40, 0, 15);
+  ctx.fillStyle = COL.wing; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = COL.ink; ctx.stroke();
+  const spots = altSpots ? [[-30, -40, 8, COL.ink], [-70, -20, 6, COL.ink], [-30, 30, 9, COL.gold]]
+                         : [[-62, -38, 10, COL.ink], [-36, -14, 5, COL.ink], [-44, 46, 8, COL.gold]];
+  for (const [x, y, r, c] of spots) { ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fillStyle = c; ctx.fill(); }
+}
+const FIG = {
+  butterfly(ctx, w, h, f) {
+    ctx.translate(w / 2, h / 2); const s = Math.min(h / 170, w / 200); ctx.scale(s, s);
+    wingPath(ctx);
+    ctx.save();
+    if (f.right === "mirror") { ctx.scale(-1, 1); wingPath(ctx); }
+    if (f.right === "copy") { ctx.translate(95, 0); wingPath(ctx); }
+    if (f.right === "rotate") { ctx.rotate(Math.PI); wingPath(ctx); }
+    if (f.right === "spots") { ctx.scale(-1, 1); wingPath(ctx, true); }
+    ctx.restore();
+    ctx.beginPath(); ctx.ellipse(0, 5, 5, 45, 0, 0, 7); ctx.fillStyle = COL.ink; ctx.fill();
+    if (f.right === "missing") {
+      ctx.setLineDash([6, 6]); ctx.beginPath(); ctx.moveTo(0, -80); ctx.lineTo(0, 85); ctx.stroke(); ctx.setLineDash([]);
+      ctx.font = "48px Georgia"; ctx.fillStyle = COL.ink; ctx.fillText("?", 40, 15);
+    }
+  },
+  snowflake(ctx, w, h, f) {
+    ctx.translate(w / 2, h / 2); const r = Math.min(w, h) * 0.42;
+    ctx.strokeStyle = COL.ice; ctx.lineCap = "round";
+    for (let k = 0; k < f.arms; k++) {
+      const gone = k >= f.arms - (f.missing || 0);
+      ctx.save(); ctx.rotate(-Math.PI / 2 + k * 2 * Math.PI / f.arms);
+      ctx.lineWidth = 4; ctx.globalAlpha = gone ? 0.25 : 1; if (gone) ctx.setLineDash([5, 7]);
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(r, 0);
+      for (const t of [0.45, 0.72]) { ctx.moveTo(r * t, 0); ctx.lineTo(r * t + r * 0.2, -r * 0.18); ctx.moveTo(r * t, 0); ctx.lineTo(r * t + r * 0.2, r * 0.18); }
+      ctx.stroke(); ctx.restore();
+      if (gone) { const a = -Math.PI / 2 + k * 2 * Math.PI / f.arms; ctx.font = "28px Georgia"; ctx.fillStyle = COL.ink; ctx.fillText("?", Math.cos(a) * r * 0.6 - 8, Math.sin(a) * r * 0.6 + 10); }
+    }
+  },
+  tiles(ctx, w, h, f) { // copies of a regular n-gon sharing one corner; a gap shows if 360 isn't a multiple of the angle
+    const n = f.sides, ext = 2 * Math.PI / n, interior = Math.PI - ext;
+    const L = (Math.min(w, h) / 2 - 6) * Math.sin(Math.PI / n);
+    ctx.translate(w / 2, h / 2);
+    const copies = Math.floor(2 * Math.PI / interior + 1e-9);
+    for (let i = 0; i < copies; i++) {
+      let x = 0, y = 0, d = i * interior;
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      for (let s = 0; s < n; s++) { x += L * Math.cos(d); y += L * Math.sin(d); ctx.lineTo(x, y); d += ext; }
+      ctx.fillStyle = i % 2 ? COL.wax : COL.gold; ctx.fill(); ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(0, 0, 4, 0, 7); ctx.fillStyle = "#b5533c"; ctx.fill();
+  },
+  honeycomb(ctx, w, h) {
+    const r = h / 7, dx = r * Math.sqrt(3);
+    for (let row = -1; row < 8; row++) for (let col = -1; col < w / dx + 1; col++) {
+      const cx = col * dx + (row & 1 ? dx / 2 : 0), cy = row * r * 1.5;
+      ctx.beginPath();
+      for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3; ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); }
+      ctx.closePath(); ctx.fillStyle = COL.wax; ctx.fill(); ctx.strokeStyle = COL.gold; ctx.lineWidth = 3; ctx.stroke();
+    }
+    const vx = 2 * dx + dx / 2, vy = 3 * r * 1.5 - r; // top corner of a hexagon in an odd row, shared by three cells
+    ctx.beginPath(); ctx.arc(vx, vy, 6, 0, 7); ctx.fillStyle = "#b5533c"; ctx.fill();
+    ctx.font = `${Math.round(h / 10)}px Georgia`; ctx.fillStyle = COL.ink; ctx.fillText("3 × 120° = ?", vx + 12, vy - 8);
+  },
+  sunflower(ctx, w, h) { // seeds at the golden angle; spiral counts come out as Fibonacci numbers
+    const m = Math.min(w, h), R = m * 0.34, N = 600, golden = Math.PI * (3 - Math.sqrt(5));
+    ctx.translate(w / 2, h / 2);
+    for (let i = 0; i < 26; i++) { ctx.save(); ctx.rotate(i * 2 * Math.PI / 26); ctx.beginPath(); ctx.ellipse(R + m * 0.06, 0, m * 0.07, m * 0.028, 0, 0, 7); ctx.fillStyle = "#f8c830"; ctx.fill(); ctx.restore(); }
+    for (let i = 1; i <= N; i++) {
+      const r = R * Math.sqrt(i / N), a = i * golden;
+      ctx.beginPath(); ctx.arc(r * Math.cos(a), r * Math.sin(a), m * 0.01, 0, 7); ctx.fillStyle = COL.seed; ctx.fill();
+    }
+  },
+  ratios(ctx, w, h) {
+    const rows = [["8 ÷ 5", "= 1.6"], ["13 ÷ 8", "= 1.625"], ["21 ÷ 13", "≈ 1.615"], ["34 ÷ 21", "≈ ?"]];
+    ctx.font = `${Math.round(h / 7)}px Georgia`; ctx.fillStyle = COL.ink;
+    rows.forEach(([a, b], i) => { const y = (i + 1) * h / 4.6; ctx.textAlign = "right"; ctx.fillText(a, w / 2 - 8, y); ctx.textAlign = "left"; ctx.fillText(b, w / 2 + 8, y); });
+  },
+  trio(ctx, w, h) {
+    const parts = [["butterfly", { right: "mirror" }], ["honeycomb", {}], ["sunflower", {}]], cw = w / 3;
+    parts.forEach(([t, f], i) => {
+      ctx.save(); ctx.translate(i * cw + 4, 4); ctx.beginPath(); ctx.rect(0, 0, cw - 8, h - 8); ctx.clip();
+      FIG[t](ctx, cw - 8, h - 8, f); ctx.restore();
+    });
+  },
+};
+function drawFigure(canvas, fig) {
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save(); FIG[fig.type](ctx, canvas.width, canvas.height, fig); ctx.restore();
+}
+
+// ---------- state, saving, text box ----------
+const $ = (s) => document.querySelector(s);
+const mapEl = $("#map"), battleEl = $("#battle"), pageEl = $("#page"), box = $("#box"), hud = $("#hud");
+const S = { mode: "page", name: "CHIPPY", badges: 0, beatenSet: new Set(), student: "", px: 7, py: 8, level: 0, step: 0, hp: MAX_HP, firstTry: true, wrongs: [], score: 0,
+            queue: [], after: null, typing: null, full: "" };
+const save = () => { try { localStorage.setItem("pd-save", JSON.stringify({ name: S.name, badges: S.badges })); } catch {} };
+const load = () => { try { return JSON.parse(localStorage.getItem("pd-save")); } catch { return null; } };
+const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function show(mode) {
+  S.mode = mode;
+  mapEl.hidden = !["map", "page"].includes(mode) && mode !== "map";
+  battleEl.hidden = mode !== "battle"; pageEl.hidden = mode !== "page"; hud.hidden = mode !== "map";
+  if (mode === "map") { mapEl.hidden = false; drawMap(); }
+}
+function say(lines, after) { S.queue = lines.slice(); S.after = after || null; box.hidden = false; next(); }
+function next() {
+  const p = box.querySelector("p");
+  if (S.typing) { clearInterval(S.typing); S.typing = null; p.textContent = S.full; return; }
+  if (!S.queue.length) { box.hidden = true; const f = S.after; S.after = null; if (f) f(); return; }
+  S.full = S.queue.shift(); let i = 0; p.textContent = "";
+  S.typing = setInterval(() => { p.textContent = S.full.slice(0, ++i); if (i >= S.full.length) { clearInterval(S.typing); S.typing = null; } }, 22);
+}
+
+// ---------- overworld ----------
+function drawMap() {
+  const c = mapEl.getContext("2d");
+  MAP.forEach((row, y) => [...row].forEach((t, x) => drawTile(c, t, x * TILE, y * TILE, x, y)));
+  drawLab(c, 3 * TILE, 7 * TILE);
+  drawPerson(c, S.px * TILE, S.py * TILE, player());
+  hud.querySelector(".badges").textContent = "Badges " + BADGES.map((_, i) => (i < S.badges ? "●" : "○")).join("");
+}
+function move(dx, dy) {
+  const nx = S.px + dx, ny = S.py + dy, t = MAP[ny][nx];
+  if (t === "D") return talkDurwin();
+  if (t === "N") return say(NPC_TALK[`${nx},${ny}`]);
+  if (t === "P") return talkStudent(STUDENTS[`${nx},${ny}`]);
+  if (t === "T" || t === "L") return;
+  const site = "GHS".indexOf(t);
+  if (site > S.badges) return say([`The path to ${LEVELS[site].name} is blocked. Earn the ${BADGES[site - 1]} first.`]);
+  S.px = nx; S.py = ny; drawMap();
+}
+function talkStudent(s) {
+  if (beaten(s.level, s.step)) return say([`${s.name}: You beat me fair and square! Check your Notebook if you forget how.`]);
+  if (s.level > S.badges) return say([`${s.name}: I only battle researchers who have the ${BADGES[s.level - 1]}.`]);
+  say([`STUDENT ${s.name}: Hey, a researcher! Let's have a pattern battle!`], () => {
+    S.level = s.level; S.step = s.step; S.student = s.name; startStep();
+  });
+}
+const beaten = (level, step) => level < S.badges || S.beatenSet.has(`${level}-${step}`);
+function talkDurwin() {
+  if (S.badges < 3) return say(DURWIN_TALK[S.badges]);
+  say(["SIR DURWIN: All three badges! You've been busy.", "SIR DURWIN: One last question. Show me what you learned!"], () => { S.level = 3; S.step = 0; startStep(); });
+}
+
+// ---------- battle ----------
+function startStep() { S.firstTry = true; S.wrongs = []; battle(); }
+function battle() {
+  const st = LEVELS[S.level].steps[S.step];
+  S.hp = MAX_HP;
+  const opts = shuffle(st.options);
+  battleEl.innerHTML = `<div class="battle">
+    <div class="field">
+      <div class="tag foe-tag"><b>${st.foe}</b><small>${st.topic}</small></div>
+      <canvas class="foe" width="320" height="180"></canvas>
+      <canvas class="me" width="16" height="16"></canvas>
+      <div class="tag me-tag"><b>${S.name}</b><div class="hp"><span>HP</span><div class="bar"><i></i></div></div><small class="hpn"></small></div>
+    </div>
+    <div class="panel"><p class="q">${st.question}</p><p class="sub"></p>
+      <div class="moves">${opts.map((o, i) => `<button data-i="${i}">${o.figure ? '<canvas width="150" height="84"></canvas>' : ""}<span>${o.text}</span></button>`).join("")}</div>
+    </div></div>`;
+  show("battle");
+  drawFigure(battleEl.querySelector("canvas.foe"), st.figure);
+  drawPerson(battleEl.querySelector("canvas.me").getContext("2d"), 0, 0, player());
+  updateHp();
+  battleEl.querySelectorAll(".moves button").forEach((btn) => {
+    const o = opts[btn.dataset.i];
+    if (o.figure) drawFigure(btn.querySelector("canvas"), o.figure);
+    btn.onclick = () => pick(st, o, btn);
+  });
+  say([st.appear || `STUDENT ${S.student} sent out ${st.foe}!`]);
+}
+function updateHp() {
+  const bar = battleEl.querySelector(".bar i");
+  bar.style.width = `${(S.hp / MAX_HP) * 100}%`;
+  bar.style.background = S.hp === 1 ? "#e04830" : S.hp === 2 ? "#f0c030" : "";
+  battleEl.querySelector(".hpn").textContent = `${S.hp}/${MAX_HP}`;
+}
+function pick(st, o, btn) {
+  if (!box.hidden) return;
+  if (o.correct) {
+    if (S.firstTry) S.score++;
+    S.beatenSet.add(`${S.level}-${S.step}`);
+    return say(["It's super effective!", `${st.foe} was recorded in your Field Notebook!`], () => entry(st));
+  }
+  btn.disabled = true; S.firstTry = false; S.hp--;
+  if (!S.wrongs.includes(o)) S.wrongs.push(o);
+  updateHp();
+  battleEl.querySelector(".field").animate([{ transform: "translateX(0)" }, { transform: "translateX(-8px)" }, { transform: "translateX(8px)" }, { transform: "translateX(0)" }], { duration: 260 });
+  if (S.hp <= 0) return say([`${S.name} is out of HP!`, `${S.name} blacked out!`, "SIR DURWIN: Don't give up. Let's look at that one again."], battle);
+  say([`Not quite... ${S.name} lost 1 HP!`], () => { battleEl.querySelector(".sub").textContent = `SIR DURWIN: "${st.hint}"`; });
+}
+
+// ---------- pages ----------
+function page(html) { pageEl.innerHTML = html; show("page"); }
+function entry(st) {
+  const notes = S.wrongs.map((o) => `<p class="wrongnote"><b>You tried ${o.text}:</b> ${o.whyWrong}</p>`).join("");
+  page(`<div class="page note"><div class="proto">Field Notebook · new entry</div><h2>${st.foe}</h2>
+    <p class="topic">${st.topic}</p><p>${st.explanation}</p>${notes}
+    <div class="row" style="margin-top:auto"><button id="nx">Next ▶</button></div></div>`);
+  $("#nx").onclick = () => {
+    if (S.level === 3) return ending();
+    if (LEVELS[S.level].steps.every((_, i) => beaten(S.level, i))) return levelDone();
+    show("map");
+    say([`STUDENT ${S.student}: Nice one! There's another student around here. Beat them too for the badge.`]);
+  };
+}
+function levelDone() {
+  S.badges = Math.max(S.badges, S.level + 1); save();
+  show("map");
+  say([`${S.name} earned the ${BADGES[S.level]}!`, ...(S.badges === 3 ? ["Go back and see SIR DURWIN at the Field Station."] : [])]);
+}
+function notebook() {
+  const entries = LEVELS.slice(0, S.badges).flatMap((l) => l.steps);
+  page(`<div class="page note"><div class="proto">Field Notebook</div><h2>${S.name}'s Notebook</h2>
+    ${entries.length ? entries.map((st) => `<div class="entry"><b>${st.foe}</b> · <span class="topic">${st.topic}</span><p>${st.explanation}</p></div>`).join("") : "<p>No entries yet. Go find some patterns!</p>"}
+    <div class="row" style="margin-top:auto"><button id="close">Close</button></div></div>`);
+  $("#close").onclick = () => show("map");
+}
+function title() {
+  const saved = load();
+  page(`<div class="page title"><h1>Pattern Detectives</h1><p>A pattern-finding adventure</p>
+    <div class="row"><button id="new">New game</button>${saved && saved.badges ? `<button id="cont">Continue (${saved.badges} badge${saved.badges > 1 ? "s" : ""})</button>` : ""}</div></div>`);
+  $("#new").onclick = intro;
+  if ($("#cont")) $("#cont").onclick = () => { Object.assign(S, saved, { px: 7, py: 8, score: 0, beatenSet: new Set() }); show("map"); };
+}
+function intro() {
+  Object.assign(S, { badges: 0, px: 7, py: 8, score: 0, beatenSet: new Set() });
+  page(`<div class="page lab"><canvas width="16" height="16"></canvas></div>`);
+  drawPerson(pageEl.querySelector("canvas").getContext("2d"), 0, 0, DURWIN);
+  say(["Hello there! I'm SIR DURWIN, but people call me the Pattern Professor.",
+       "This world is full of patterns: on butterfly wings, inside beehives, in sunflower heads.",
+       "Every pattern follows a rule. My research is finding those rules.",
+       "Now, which of my three assistants is reporting for duty today?"], chooseChar);
+}
+function chooseChar() {
+  pageEl.querySelector(".lab").insertAdjacentHTML("beforeend",
+    `<div class="chars">${Object.keys(CHARS).map((n) => `<button data-n="${n}"><canvas width="16" height="16"></canvas>${n}</button>`).join("")}</div>`);
+  pageEl.querySelectorAll(".chars button").forEach((b) => {
+    drawPerson(b.querySelector("canvas").getContext("2d"), 0, 0, CHARS[b.dataset.n]);
+    b.onclick = () => {
+    S.name = b.dataset.n;
+    pageEl.querySelector(".chars").remove(); save();
+    say([`Right! ${S.name}, you'll be my research assistant.`,
+         "Take this FIELD NOTEBOOK. Every pattern you figure out gets recorded in it.",
+         "Students are waiting at three sites north of the Field Station. Beat them in pattern battles to earn badges.",
+         "Off you go!"], () => show("map"));
+    };
+  });
+}
+function ending() {
+  save();
+  page(`<div class="page title"><h1>Notebook complete!</h1>
+    <p>SIR DURWIN: Wonderful, ${S.name}! Every pattern you found followed a rule. That's what mathematics studies.</p>
+    <p style="font-size:26px">${S.score} of 7 on the first try</p>
+    <div class="row"><button id="again">Play again</button></div></div>`);
+  $("#again").onclick = () => { try { localStorage.removeItem("pd-save"); } catch {} title(); };
+}
+
+// ---------- input ----------
+const DIRS = { ArrowUp: [0, -1], w: [0, -1], ArrowDown: [0, 1], s: [0, 1], ArrowLeft: [-1, 0], a: [-1, 0], ArrowRight: [1, 0], d: [1, 0] };
+function key(k) {
+  if (!box.hidden) { if (["Enter", " ", "z"].includes(k)) next(); return; }
+  if (S.mode !== "map") return;
+  if (DIRS[k]) move(...DIRS[k]);
+  else if (k === "n") notebook();
+}
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT") return;
+  if (e.key.startsWith("Arrow") || e.key === " ") e.preventDefault();
+  key(e.key.length === 1 ? e.key.toLowerCase() : e.key);
+});
+box.onclick = next;
+$("#nbBtn").onclick = notebook;
+document.querySelectorAll("#pad button").forEach((b) => (b.onclick = () => key(b.dataset.k)));
+
+title();
+</script>
+</body>
+</html>
