@@ -1,7 +1,7 @@
 // Battles: students (two rounds each), the rival, wild patterns, Sir Durwin's Conclusion, practice replays, and the speed battle.
 import { S, settings, saveSlot, unlock, stat, beaten } from "./state.js";
 import { LEVELS, BADGES, RIVAL, DURWIN, stepKey, playerLook } from "./content.js";
-import { drawFigure, drawPerson, drawFlake, describe } from "./draw.js";
+import { drawFigure, drawPerson, drawFlake, drawBattleBg, describe } from "./draw.js";
 import { generate, POLY } from "./questions.js";
 import { SFX } from "./audio.js";
 import { say, choice, show, flash, boxOpen, entryPage, endingScene, notebook, speedResults } from "./ui.js";
@@ -71,6 +71,7 @@ function render() {
   B.opts = shuffle(st.options); B.tier = 0; B.sel = 0; B.t0 = performance.now();
   battleEl.innerHTML = `<div class="battle">
     <div class="field" style="background:linear-gradient(${FIELD[Math.min(cfg.level, 3)]})">
+      <canvas class="bg" width="320" height="180" aria-hidden="true"></canvas>
       <div class="tag foe-tag"><b>${withTrainer ? T.label : st.foe}</b><small>${withTrainer ? "wants to battle!" : st.topic}</small></div>
       ${withTrainer ? `<canvas class="trainer" width="16" height="16" role="img" aria-label="${T.label}"></canvas>` : ""}
       <canvas class="foe" width="320" height="180" role="img" aria-label="${describe(st.figure)}" style="opacity:${withTrainer ? 0 : 1}"></canvas>
@@ -84,6 +85,7 @@ function render() {
       <div class="actions">${st.tryIt ? '<button id="tryBtn">Try it (T)</button>' : ""}<button id="bagBtn">${bagLabel()}</button>${cfg.kind === "wild" ? '<button id="runBtn">Run</button>' : ""}</div>
     </div></div>`;
   show("battle");
+  paintBg(cfg.level);
   drawFigure(battleEl.querySelector("canvas.foe"), st.figure);
   if (withTrainer) drawPerson(battleEl.querySelector("canvas.trainer").getContext("2d"), 0, 0, T.look);
   drawPerson(battleEl.querySelector("canvas.me").getContext("2d"), 0, 0, playerLook(), 0, "up");
@@ -96,6 +98,11 @@ function render() {
   battleEl.querySelector("#bagBtn").onclick = useBag;
   if (st.tryIt) battleEl.querySelector("#tryBtn").onclick = tryIt;
   if (cfg.kind === "wild") battleEl.querySelector("#runBtn").onclick = () => !boxOpen() && say(["Got away safely!"], () => show("map"));
+}
+function paintBg(level) { // sized to the battle field (at half resolution) so the platforms sit under the sprites
+  const bg = battleEl.querySelector("canvas.bg"), field = battleEl.querySelector(".field");
+  bg.width = Math.max(160, Math.round(field.clientWidth / 2)); bg.height = Math.max(90, Math.round(field.clientHeight / 2));
+  drawBattleBg(bg.getContext("2d"), bg.width, bg.height, level);
 }
 function sendOut() { // the trainer steps aside and the pattern pops in
   const trainer = battleEl.querySelector("canvas.trainer"), foe = battleEl.querySelector("canvas.foe");
@@ -246,6 +253,7 @@ function nextSpeed() {
   B.opts = shuffle(st.options); B.sel = 0;
   battleEl.innerHTML = `<div class="battle">
     <div class="field" style="background:linear-gradient(${FIELD[3]})">
+      <canvas class="bg" width="320" height="180" aria-hidden="true"></canvas>
       <div class="tag foe-tag"><b>SPEED BATTLE</b><small>Score: ${B.score} · Esc to stop</small></div>
       <canvas class="foe" width="320" height="180" role="img" aria-label="${describe(st.figure)}"></canvas>
       <div class="timer" aria-hidden="true"><i></i></div>
@@ -254,6 +262,7 @@ function nextSpeed() {
       <div class="moves">${B.opts.map((o, i) => `<button data-i="${i}">${o.figure ? '<canvas width="150" height="84" aria-hidden="true"></canvas>' : ""}<span>${o.text}</span></button>`).join("")}</div>
     </div></div>`;
   show("battle");
+  paintBg(3);
   drawFigure(battleEl.querySelector("canvas.foe"), st.figure);
   markSel();
   battleEl.querySelectorAll(".moves button").forEach((btn) => { const o = B.opts[btn.dataset.i]; btn.onclick = () => pick(o, btn); });

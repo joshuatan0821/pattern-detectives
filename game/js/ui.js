@@ -2,7 +2,7 @@
 import { S, G, settings, SLOTS, saveGlobal, saveSlot, readSlot, loadSlot, clearSlot, freshRun, resetStats, unlock } from "./state.js";
 import { LEVELS, BADGES, CHARS, FACTS, GLOSSARY, ACHIEVEMENTS, ENDING_LINES, INTRO_LINES, MAPS, GOLD_HAT, startLines, totalSteps, stepKey, speakerLook, playerLook } from "./content.js";
 import { drawPerson, drawFigure, drawBadge, runAnim, stopAnims, describe } from "./draw.js";
-import { SFX, audioOn } from "./audio.js";
+import { SFX, audioOn, playMusic } from "./audio.js";
 import { drawMapTo } from "./world.js";
 import { practiceBattle, speedBattle, stars } from "./battle.js";
 
@@ -16,6 +16,8 @@ export function show(mode) {
   battleEl.hidden = mode !== "battle"; pageEl.hidden = mode !== "page"; hud.hidden = mode !== "map"; mapEl.hidden = mode === "battle";
   if (mode !== "map") overlay.hidden = true;
   if (mode !== "page") stopAnims();
+  if (mode === "map") playMusic("town");
+  if (mode === "battle") playMusic("battle");
 }
 export function page(html) { stopAnims(); S.back = null; pageEl.innerHTML = html; show("page"); pageEl.scrollTop = 0; }
 
@@ -90,7 +92,7 @@ export function flash(cb) { // white flashes, then black, then the battle fades 
 export function updateMute() { $("#mute").textContent = settings.muted ? "Sound off" : "Sound on"; }
 export function toggleMute() { settings.muted = !settings.muted; updateMute(); saveGlobal(); }
 export function title() {
-  document.body.classList.toggle("big", settings.bigText); updateMute();
+  document.body.classList.toggle("big", settings.bigText); updateMute(); playMusic("title");
   const saves = [...Array(SLOTS).keys()].map(readSlot);
   page(`<div class="page title"><canvas class="tsun" width="360" height="180" aria-hidden="true"></canvas><h1>Pattern Detectives</h1>
     <p>A pattern-finding adventure in Barangay Maligaya</p>
@@ -270,6 +272,7 @@ export function speedResults(score) {
 export function endingScene() { // Sir Durwin turns through the notebook, one recorded pattern per page
   const pages = LEVELS.flatMap((l) => l.steps);
   let i = 0;
+  playMusic("title");
   const turn = () => {
     if (i >= pages.length) return hallOfFame();
     const st = pages[i];

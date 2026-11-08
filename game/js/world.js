@@ -1,7 +1,7 @@
 // The overworld: drawing maps, walking (keys or click/tap), doors, people, sight lines, hidden notes, and wild patterns.
 import { S, saveSlot, unlock, beaten } from "./state.js";
 import { MAPS, PEOPLE, FACTS, LEVELS, BADGES, TALK, STORE_LINES, JEEP_LINES, SIGN_COUNT, HOME, playerLook } from "./content.js";
-import { TILE, drawTile, drawPerson, drawBang, drawLock, drawStar, drawLab, drawStore, drawJeep } from "./draw.js";
+import { TILE, drawTile, drawPerson, drawShadow, drawBang, drawLock, drawStar, drawLab, drawStore, drawJeep } from "./draw.js";
 import { SFX } from "./audio.js";
 import { say, boxOpen, fade, toast } from "./ui.js";
 import { studentBattle, rivalBattle, wildBattle, finalBattle } from "./battle.js";
@@ -19,15 +19,16 @@ const warpAt = (x, y) => MAPS[S.map].warps[`${x},${y}`];
 const walkable = (x, y) => WALK.has(tileAt(S.map, x, y)) && !personAt(x, y) && !warpAt(x, y);
 
 // ---------- drawing ----------
-export function drawMapTo(c, mapId) {
+export function drawMapTo(c, mapId, time = 0) {
   const m = MAPS[mapId];
   m.rows.forEach((row, y) => [...row].forEach((t, x) => {
-    drawTile(c, t, x * TILE, y * TILE, m.pal);
+    drawTile(c, t, x * TILE, y * TILE, m.pal, x, y, (dx, dy) => m.rows[y + dy]?.[x + dx] ?? "T", time);
     const w = m.warps[`${x},${y}`];
     if (w && w.level != null) { if (w.level > S.badges) drawLock(c, x * TILE, y * TILE); else if (w.level < S.badges) drawStar(c, x * TILE, y * TILE); }
   }));
   if (mapId === "town") { drawLab(c, 4 * TILE, 6 * TILE); drawStore(c, 1 * TILE, 6 * TILE); drawJeep(c, 11 * TILE, 5 * TILE); }
   for (const p of peopleOn(mapId)) {
+    drawShadow(c, p.x * TILE, p.y * TILE);
     drawPerson(c, p.x * TILE, p.y * TILE, p.look, 0, p.face);
     if (p.student && beaten(p.student.level, p.student.step)) drawStar(c, p.x * TILE, p.y * TILE - 1);
   }
@@ -35,11 +36,12 @@ export function drawMapTo(c, mapId) {
 }
 function drawMap(now) {
   const c = mapEl.getContext("2d");
-  drawMapTo(c, S.map);
+  drawMapTo(c, S.map, now);
   const look = playerLook();
   if (look) { // slide between tiles, lifting a leg for the first part of each step
     let x = S.px, y = S.py, frame = 0;
     if (S.mv) { const p = Math.min(1, (now - S.mv.t0) / STEP_MS); x = S.mv.fx + (S.px - S.mv.fx) * p; y = S.mv.fy + (S.py - S.mv.fy) * p; frame = p < 0.6 ? 1 + (S.stepN % 2) : 0; }
+    drawShadow(c, Math.round(x * TILE), Math.round(y * TILE));
     drawPerson(c, Math.round(x * TILE), Math.round(y * TILE), look, frame, S.dir);
   }
   if (S.bang) drawBang(c, S.bang.x * TILE, S.bang.y * TILE);

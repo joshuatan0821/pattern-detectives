@@ -19,11 +19,11 @@ export const BADGES = ["Symmetry Badge", "Tiling Badge", "Fibonacci Badge"];
 // ---------- people ----------
 export const DURWIN = { hat: "#b8b8c0", shirt: "#f8f8f8", pants: "#404858", glasses: true, coat: true };
 export const CHARS = {
-  CHIPPY: { look: { hat: "#48a050", shirt: "#f08030", pants: "#3a3a48" },
+  CHIPPY: { look: { hat: "#48a050", shirt: "#f08030", pants: "#3a3a48", pack: "#a0522d" },
             pick: "CHIPPY: Notebook ready, pencil sharpened. Let's go!", win: "CHIPPY: Every page is full. Best field trip ever!" },
-  BRYCE: { look: { hat: "#3a2a20", shirt: "#3878c8", pants: "#5a4630" },
+  BRYCE: { look: { hat: "#3a2a20", shirt: "#3878c8", pants: "#5a4630", pack: "#2f4f6f" },
            pick: "BRYCE: Patterns? I'll check every answer twice.", win: "BRYCE: Checked, double-checked, and recorded!" },
-  JOSHUA: { look: { hat: "#181818", shirt: "#c03838", pants: "#303848" },
+  JOSHUA: { look: { hat: "#181818", shirt: "#c03838", pants: "#303848", pack: "#5a6070" },
             pick: "JOSHUA: I'll figure out the rule behind all of it.", win: "JOSHUA: Every pattern ran on a rule. Just like code!" },
 };
 export const GOLD_HAT = "#f0c020"; // the perfect-run reward
