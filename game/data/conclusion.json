@@ -1,4 +1,28 @@
 {
   "name": "Conclusion",
-  "steps": []
+  "steps": [
+    {
+      "id": "conclusion",
+      "topic": "Math as a science of patterns",
+      "foe": "THE BIG PICTURE",
+      "effect": "Pattern sense is super effective!",
+      "question": "What do the butterfly, the honeycomb, and the sunflower have in common?",
+      "figure": { "type": "trio" },
+      "options": [
+        { "text": "Each follows a rule math can describe", "correct": true },
+        { "text": "They are all made by insects", "whyWrong": "Sunflowers and snowflakes aren't made by insects. The link is the pattern, not the maker." },
+        { "text": "They are all random", "whyWrong": "Each one follows an exact rule: reflection, 120° corners, or adding the two numbers before." },
+        { "text": "They all have exactly six parts", "whyWrong": "Only the snowflake and the hexagon involve six. A butterfly has two halves; a sunflower has 21, 34, 55… spirals." }
+      ],
+      "hint": "Think about what you did at each Level: you found a rule.",
+      "polya": {
+        "understand": "Think about what you did at the butterfly, the honeycomb, and the sunflower.",
+        "plan": "At each Level you found a rule. Which option is about rules?",
+        "lookBack": "Reflection, 120° corners, and adding the two numbers before are all rules you can write in mathematics."
+      },
+      "explanation": "Symmetry, tessellation, and the Fibonacci numbers are all rules that can be written in mathematics. As Devlin (2000) puts it, mathematics is the science of patterns.",
+      "why": "Seeing the rule behind a pattern lets you predict it, and prediction is a big part of what mathematics is for.",
+      "cite": "Devlin (2000)"
+    }
+  ]
 }

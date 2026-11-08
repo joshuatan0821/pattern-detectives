@@ -2,5 +2,56 @@
   "level": 1,
   "name": "The Garden",
   "setting": "Butterfly wings and snowflakes",
-  "steps": []
+  "steps": [
+    {
+      "id": "l1s1",
+      "topic": "Reflection symmetry",
+      "foe": "BUTTERFLY",
+      "effect": "Reflection is super effective!",
+      "question": "Half of this butterfly is missing. Which picture completes it?",
+      "figure": { "type": "butterfly", "right": "missing" },
+      "options": [
+        { "text": "A", "figure": { "type": "butterfly", "right": "mirror" }, "correct": true },
+        { "text": "B", "figure": { "type": "butterfly", "right": "copy" }, "whyWrong": "B slides the same wing over without flipping it. That's a translation, not a reflection." },
+        { "text": "C", "figure": { "type": "butterfly", "right": "rotate" }, "whyWrong": "C turns the wing upside down (a 180° rotation). A mirror flips left and right only." },
+        { "text": "D", "figure": { "type": "butterfly", "right": "spots" }, "whyWrong": "D has the right shape, but its spots don't match the other side." }
+      ],
+      "hint": "Imagine folding the page along the body. Both halves should land on each other exactly.",
+      "polya": {
+        "understand": "The missing half must match the half you can see, as if the page were folded along the body.",
+        "plan": "Picture each option folded onto the left wing. Which one lands exactly, spots and all?",
+        "lookBack": "Check one spot: the big dark spot must be the same distance from the body on both sides."
+      },
+      "explanation": "A butterfly has reflection symmetry: the body is a line of symmetry, and each wing is the mirror image of the other. Every point on the left has a matching point the same distance away on the right.",
+      "why": "Left–right symmetry is common in animals that move in one direction, like butterflies, fish, and people.",
+      "cite": "Stewart (2017)",
+      "anim": "reflect",
+      "tryIt": "reflect"
+    },
+    {
+      "id": "l1s2",
+      "topic": "Rotational symmetry",
+      "foe": "SNOWFLAKE",
+      "effect": "Rotation is super effective!",
+      "question": "This snowflake lost an arm. The arms are spaced evenly. How many degrees apart are they?",
+      "figure": { "type": "snowflake", "arms": 6, "missing": 1 },
+      "options": [
+        { "text": "60°", "correct": true },
+        { "text": "72°", "whyWrong": "72° = 360° ÷ 5. That counts only the five arms you can see, not the missing one." },
+        { "text": "90°", "whyWrong": "90° = 360° ÷ 4 would give a snowflake with four arms." },
+        { "text": "45°", "whyWrong": "45° = 360° ÷ 8 would give eight arms." }
+      ],
+      "hint": "A full turn is 360°. How many arms would a complete snowflake have?",
+      "polya": {
+        "understand": "The arms are evenly spaced around one full turn of 360°.",
+        "plan": "Count the arms a complete snowflake would have, including the missing one, then share 360° between them.",
+        "lookBack": "6 × 60° = 360°, so six turns of 60° bring the snowflake all the way around."
+      },
+      "explanation": "A complete snowflake has 6 arms, so the arms are 360° ÷ 6 = 60° apart. Turning it by 60° lands it on itself: six-fold rotational symmetry. Ice crystals grow this way because water molecules lock into a hexagonal pattern.",
+      "why": "Snowflakes get their six-fold shape from the hexagonal way water molecules freeze.",
+      "cite": "Stewart (2017)",
+      "anim": "rotate",
+      "tryIt": "rotate"
+    }
+  ]
 }

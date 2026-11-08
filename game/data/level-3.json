@@ -2,5 +2,54 @@
   "level": 3,
   "name": "The Sunflower Field",
   "setting": "Sunflowers, pinecones, and shells",
-  "steps": []
+  "steps": [
+    {
+      "id": "l3s1",
+      "topic": "Fibonacci sequence",
+      "foe": "SUNFLOWER",
+      "effect": "Fibonacci is super effective!",
+      "question": "This sunflower has 21 spirals one way and 34 the other. How many spirals would the next size up have?",
+      "figure": { "type": "sunflower" },
+      "options": [
+        { "text": "55", "correct": true },
+        { "text": "68", "whyWrong": "68 doubles 34. The pattern adds the two numbers before instead." },
+        { "text": "47", "whyWrong": "47 adds 13 to 34, as if the jump from 21 to 34 repeats. The jumps grow each time." },
+        { "text": "35", "whyWrong": "35 counts up by one. The spiral counts grow much faster." }
+      ],
+      "hint": "Look at how each number in 1, 1, 2, 3, 5, 8, 13, 21, 34 relates to the two before it.",
+      "polya": {
+        "understand": "21 and 34 are neighbours in a famous sequence: 1, 1, 2, 3, 5, 8, 13, 21, 34, …",
+        "plan": "Find the rule that makes each number from the two before it, then apply it to 21 and 34.",
+        "lookBack": "13 + 21 = 34 and 21 + 34 = 55. The same rule works every time."
+      },
+      "explanation": "Each Fibonacci number is the sum of the two before it, so 21 + 34 = 55. Sunflower spirals almost always come in neighbouring Fibonacci numbers, as do pinecones and pineapples.",
+      "why": "Placing each seed at the golden angle packs the seeds tightly with no wasted space, and that is what makes the Fibonacci spirals appear.",
+      "cite": "Knott (n.d.)",
+      "tryIt": "spirals"
+    },
+    {
+      "id": "l3s2",
+      "topic": "The golden ratio",
+      "foe": "GOLDEN RATIO",
+      "effect": "The golden ratio is super effective!",
+      "question": "Divide each Fibonacci number by the one before it. What do the answers get closer to?",
+      "figure": { "type": "ratios" },
+      "options": [
+        { "text": "About 1.618", "correct": true },
+        { "text": "2", "whyWrong": "Each number is less than double the one before (34 < 2 × 21), so the ratio stays below 2." },
+        { "text": "1.5", "whyWrong": "3/2 = 1.5 is an early ratio, but later ones settle above it: 1.6, 1.625, 1.615…" },
+        { "text": "They keep growing forever", "whyWrong": "The numbers grow, but their ratio settles down, bouncing closer and closer to one number." }
+      ],
+      "hint": "Work out 34 ÷ 21 and compare it with the ratios already shown.",
+      "polya": {
+        "understand": "You're dividing each Fibonacci number by the one just before it.",
+        "plan": "Work out 34 ÷ 21, then compare it with 1.6, 1.625, and 1.615.",
+        "lookBack": "The answers bounce above and below 1.618 and get closer every time."
+      },
+      "explanation": "The ratios 8/5 = 1.6, 13/8 = 1.625, 21/13 ≈ 1.615, 34/21 ≈ 1.619 approach the golden ratio φ = (1 + √5) / 2 ≈ 1.618. It is closely tied to the golden angle that sunflowers use to place their seeds.",
+      "why": "The golden angle, about 137.5°, comes from φ, and it is the turn a sunflower makes between one seed and the next.",
+      "cite": "Knott (n.d.)",
+      "anim": "ratioGraph"
+    }
+  ]
 }
