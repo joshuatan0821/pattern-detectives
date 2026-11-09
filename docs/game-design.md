@@ -1,92 +1,104 @@
 # Game design
 
-Capitalised terms (Level, Puzzle, Step, Hint, ...) are defined in [GLOSSARY.md](../GLOSSARY.md).
+Capitalised terms (Level, Step, Battle, Hint, ...) are defined in [GLOSSARY.md](../GLOSSARY.md). The game plays like an old Game Boy Advance Pokémon game: a small world to walk around, students who challenge you to Battles, and Badges to earn.
 
 ## Story
 
-The player is an assistant Researcher sent out to study patterns in nature. At each site they observe one pattern closely and work out the rule behind it. After the third site, they compare their notes to find what all the patterns have in common.
+Something is scrambling the patterns of **Barangay Maligaya**: lopsided butterflies, floors full of gaps, sunflowers that lost count. **Sir Durwin**, the Pattern Professor at the Field Station, sends one of his three assistant Researchers (the player picks **Chippy, Bryce, or Joshua**) to the three Levels north of town. Students at each Level guard the clues. Winning their Battles earns the Level's Badge and restores its patterns. With all three Badges, the Researcher returns to Sir Durwin for the Conclusion, he reads through their Field Notebook with them, and the run ends in the Hall of Fame.
 
-Story text is kept short:
+All dialogue is in `game/js/content.js`. Filipino touches: the sari-sari store and its tindera, a jeepney, Lola, and a few Tagalog greetings (*Magandang araw*, *Salamat*, *Ingat*).
 
-- **Intro**: 3–4 lines before Level 1.
-- **Level intro**: one line when each Level begins, saying what the Researcher is there to study.
-- **Ending**: 1–2 lines after the Conclusion, followed by the Score.
+## World
 
-Final wording lives in `game/data/story.json` (to be written during storyboarding).
+The world is a set of 15 × 10 tile maps (the GBA's 240 × 160 screen):
+
+| Map | What's there |
+| --- | --- |
+| Field Station (lab) | Sir Durwin. The game opens here and the Conclusion Battle happens here |
+| Barangay Maligaya (town) | Lab, sari-sari store (a free Hint Potion), jeepney, Lola and the beekeeper (Hints for the current Level), signs, rival Jamie, tall grass |
+| The Garden, The Beehive, The Sunflower Field | Two students each, a sign, tall grass with a hidden note. Each looks "scrambled" (greyed) until its Badge is earned |
+
+- Walk with the arrow keys/WASD, or click or tap a tile to walk there. Enter talks to whoever you face.
+- Level entrances are locked until the Badge before them is earned.
+- Students see along a line in front of them. Walk into their sight and they spot you ("!") and start a Battle.
+- **Tall grass** can start a wild Battle with a practice question. **Hidden notes** in the grass add a fact to the Notebook and a Hint Potion.
+- **Jamie**, the rival, appears in town once after each Badge for a two-question Battle.
 
 ## Levels
 
-Levels go from the easiest pattern to notice to the hardest. Each Level has one Puzzle, made of two Steps.
+Levels go from the easiest pattern to notice to the hardest. Each Level has two Steps, one per student.
 
-| # | Level | Setting | Mathematics | Step 1 | Step 2 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | The Garden | Butterfly wings and snowflakes | Symmetry: reflection and rotation | Complete the missing half of a butterfly wing (reflection) | Find the missing arm of a snowflake with six-fold (60°) rotational symmetry |
-| 2 | The Beehive | Honeycomb | Tessellations | Which regular polygon can tile a floor without gaps? | Why do hexagons fit? (three 120° corners make 360°) |
-| 3 | The Sunflower Field | Sunflowers, pinecones, shells | Number patterns, Fibonacci sequence, golden ratio | Count the spirals on a sunflower and find the next Fibonacci number | Ratios of consecutive Fibonacci numbers (8/5, 13/8, 21/13) approach about 1.618 |
-| — | Conclusion | All three | Math as a science of patterns | What do the butterfly, the honeycomb, and the sunflower have in common? | |
+| # | Level | Mathematics | Student 1 (Step 1) | Student 2 (Step 2) |
+| --- | --- | --- | --- | --- |
+| 1 | The Garden | Symmetry: reflection and rotation | Mia: complete the butterfly | Leo: the missing snowflake arm (60°) |
+| 2 | The Beehive | Tessellations | Ana: which polygon tiles with no gap | Raf: why hexagons fit (3 × 120° = 360°) |
+| 3 | The Sunflower Field | Fibonacci sequence, golden ratio | Joy: the next spiral count | Kit: ratios approach about 1.618 |
+| — | Conclusion | Math as a science of patterns | Sir Durwin: what the three patterns share | |
 
-The full topic map and Step format are in [docs/puzzles/README.md](puzzles/README.md).
+The Step texts and the Step format are in [docs/puzzles/README.md](puzzles/README.md).
 
-## The Step cycle
+## Battles
 
-1. The Step shows a question, usually a Figure, and **four** Options in shuffled order. An Option may be text, a Figure, or both.
-2. **Wrong Option**: the Option is greyed out and the player tries again. There is no penalty, beyond missing the first-try point for the Score.
-3. **Hint**: appears automatically after **60 seconds** on the Step, or after **two wrong attempts**, whichever comes first. There is no Hint button.
-4. **Correct Option**: the Explanation screen shows why the correct Option is right, and for each Distractor the player chose, why it was wrong.
-5. After a Level's last Step, the next Level begins. After Level 3 comes the Conclusion, then the ending and the Score.
+1. **Start**: a white flash, the student says a line, then sends out the pattern. The pattern's Figure is the opponent, and the four Options are the move menu (click, or arrow keys and Enter).
+2. **Rounds**: a student Battle has two rounds. Round 1 is the student's Step from the JSON files. Round 2 is a practice question generated from the same Level's rules (`game/js/questions.js`). Only round 1 counts for the Score and the Notebook.
+3. **HP**: the Researcher has 3 HP per Battle. A wrong Option costs 1 HP, is crossed out, and its `whyWrong` is shown right away. At 0 HP the Researcher blacks out and the Battle restarts with the Options reshuffled. A Step can only be lost by trying every Distractor.
+4. **Hints** follow Polya's steps. The first wrong answer shows *Understand*, and the second shows *Plan* and highlights the key part of the Figure in red. A **Hint Potion** from the Bag shows the next Hint without losing HP.
+5. **Try it**: some Steps have a hands-on version of the Figure to explore before answering: flip the wing, turn the snowflake, add tiles around a corner, trace the sunflower's 21 and 34 spirals.
+6. **Win**: "Reflection is super effective!" The pattern fades into the Field Notebook, and the Explanation page shows the animation or extra Figures, *Look back*, *Why it matters*, notes on any Distractors chosen, and the source.
+7. Winning both students' Battles earns the Badge, shows the Level's stars (★ per first-try Step), and offers a quick trip back to the Field Station.
+
+An optional setting asks "Use this answer?" before each pick, to protect HP from misclicks. It's on by default.
 
 ## Figures
 
-Figures are drawn on the Canvas by code that follows each pattern's exact rule: mirroring for the butterfly wing, 60° rotation for the snowflake, regular polygons for the tilings, and Fibonacci numbers for the sunflower spirals. This keeps every Figure mathematically exact, and Bryce checks the rules. A Step's data names which Figure to draw and with what settings, so a wrong Option can be the same Figure with a deliberate mistake (e.g. a snowflake with five arms).
+Figures are drawn on the Canvas by code that follows each pattern's exact rule: mirroring for the butterfly wing, 60° rotation for the snowflake, regular polygons for the tilings, the golden angle for the sunflower seeds. Bryce checks the rules. A Step's data names which Figure to draw and with what settings, so a wrong Option can be the same Figure with a deliberate mistake.
 
-## Score
+## Score and rewards
 
-The Score counts how many of the seven Steps (six in the Levels plus the Conclusion) were answered correctly on the first try. It's shown on the ending screen, e.g. "5 of 7 on the first try." Nothing else depends on it.
+- **Score**: how many of the seven Steps were answered correctly on the first try, shown in the Hall of Fame ("5 of 7 on the first try").
+- **Stars** per Level, a **first-try streak** counter, and nine **Achievements** (kept across runs).
+- A perfect run (7 of 7) unlocks a **golden hat** for every later run.
 
 ## Screens
 
 | Screen | Contents |
 | --- | --- |
-| Title | Game name, **Start**, **Continue** (only if there is saved progress), **Start over**, mute toggle |
-| Intro | The 3–4 story lines, then into Level 1 |
-| Level intro | Level name, setting, one line of story |
-| Step | Level name, Step number, question, Figure, four Options, Hint when shown, mute toggle |
-| Explanation | Why the answer is right, notes on chosen Distractors, **Next** |
-| Conclusion | Same layout as a Step |
-| Ending | Closing lines, the Score, **Play again** |
+| Title | New game, Continue (3 save slots), Speed battle, Demo mode, Achievements, Controls, Settings, Playtest data |
+| Menu (Esc) | Field Notebook, Badges, Town map, Achievements, Settings, Controls, Save, Quit to title |
+| Field Notebook | Recorded Steps (with Battle again for practice), hidden notes, glossary |
+| Ending | Sir Durwin turns through the notebook, then the Hall of Fame and rolling credits |
+| Speed battle | As many practice questions as possible in 60 seconds |
+| Demo mode | Jump to any Level or the final Battle for the live presentation. Demo runs are not saved and earn nothing |
+| Playtest data | Per Step: times solved, first-try rate, median time, and which wrong Options were picked, with a Copy button for the report |
 
-## Progress
+## Saving
 
-The browser remembers the furthest Level reached. **Continue** resumes at the start of that Level, and **Start over** clears it. This also lets us jump straight to Level 3 during the live demo. The Score counts only Steps played in the current run.
+Three save slots in the browser's local storage. The game saves after each Battle, Badge, door, and from the menu. Settings, Achievements, the golden hat, and playtest stats are shared across slots.
 
 ## Audio
 
-- One looping music track
-- Three sound effects: correct, wrong, Level complete
-- A mute toggle on every screen
+Placeholder chiptune sounds are made in code (text blips, hits, the battle flash, victory and Badge jingles). Adrian's music and effects replace them later. Volume, mute (M), and text speed are in Settings. Browsers only allow sound after the player interacts, so audio starts with the first button press.
 
-Browsers only allow sound after the player interacts, so audio starts when **Start** or **Continue** is pressed.
+## Accessibility
 
-## Display
-
-- HTML5 Canvas for backgrounds and Figures, with text and buttons as HTML on top
-- Landscape, designed at 1280 × 720 and scaled to fit the window
-- Works with mouse and touch (the game only needs clicks and taps)
-- English text
+- Readable sans-serif text for questions, dialogue, and the Notebook. The pixel font is used only for titles and labels
+- Larger text and text speed settings, and hold X to fast-forward
+- Figures have text descriptions for screen readers, and the dialogue box is announced as it changes
+- Figures never rely on colour alone (gaps, labels, and line styles carry the meaning)
+- Keyboard, mouse, and touch all work. Phones get a portrait layout with on-screen arrows and A/B buttons
 
 ## Play-time budget
 
-The proposal aims for up to 30 minutes. A realistic estimate for one Puzzle per Level:
-
 | Part | Time |
 | --- | --- |
-| Title, intro, Level intros | ~2 min |
-| 7 Steps × ~1.5 min (including Hint and Explanation) | ~10.5 min |
-| Ending | ~0.5 min |
-| **Total** | **~13 min** (10–15) |
+| Opening scene and walking | ~2 min |
+| 6 student Battles × ~2 min (two rounds, Hints, Explanation) | ~12 min |
+| Rival, wild Battles, notes (optional) | ~3 min |
+| Conclusion, ending, Hall of Fame | ~2 min |
+| **Total** | **~19 min** (15–25) |
 
-Measure real times during playtesting and report them in the progress report and presentation.
+Measure real times during playtesting with the Playtest data screen.
 
 ## Out of scope
 
-Timers that end a Step, lives, a Hint button, accounts or log-in, difficulty settings, and more than three Levels.
+Timers that end a Step in the main game, accounts or log-in, difficulty settings, and more than three Levels.

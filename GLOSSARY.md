@@ -39,7 +39,7 @@ An incorrect Option written to reflect a specific common mistake.
 _Avoid_: Wrong answer, decoy
 
 **Hint**:
-A short nudge toward the correct Option, shown automatically after 60 seconds on a Step or after two wrong attempts, whichever comes first.
+A short nudge toward the correct Option, following Polya's steps: *Understand* after the first wrong attempt, *Plan* (with the key part of the Figure highlighted) after the second. A Hint Potion shows the next Hint early.
 _Avoid_: Clue, tip
 
 **Explanation**:
@@ -49,3 +49,33 @@ _Avoid_: Solution screen, feedback, answer key
 **Score**:
 The number of Steps answered correctly on the first try, shown at the end of the game.
 _Avoid_: Points, grade, accuracy
+
+## Play
+
+**Battle**:
+How a Step is played: a student (or Sir Durwin) sends out the pattern, and the Researcher answers with one of the four Options as a move.
+_Avoid_: Fight, quiz
+
+**Student**:
+A character who challenges the Researcher to a Battle. Each Level has two, one per Step.
+_Avoid_: Trainer, enemy
+
+**HP**:
+The Researcher's 3 hit points in a Battle. A wrong Option costs 1; at 0 the Battle restarts.
+_Avoid_: Lives, health
+
+**Badge**:
+Earned by winning both student Battles at a Level; it unlocks the next Level.
+_Avoid_: Medal, trophy
+
+**Field Notebook**:
+Where solved Steps are recorded with their Explanations, plus hidden notes and the glossary.
+_Avoid_: Pokédex, journal
+
+**Practice question**:
+A question generated from a Level's rules (in `game/js/questions.js`), used for second rounds, the rival, wild Battles, and the speed battle. It never counts toward the Score.
+_Avoid_: Bonus Step, random question
+
+**Hint Potion**:
+A bag item that shows the next Hint without costing HP.
+_Avoid_: Power-up

@@ -41,6 +41,21 @@ Each Step has:
 | `hint` | One or two sentences that point the way without giving the answer away |
 | `explanation` | Why the correct Option is right, in a few sentences |
 
+Optional fields the game uses (the format check ignores them, but the mathematical check covers them like everything else):
+
+| Field | What to write |
+| --- | --- |
+| `foe` | The pattern's name in the Battle, in capitals, e.g. `BUTTERFLY` |
+| `effect` | The win line, e.g. `Reflection is super effective!` |
+| `polya` | `{ "understand": …, "plan": …, "lookBack": … }`. The first two are the Hints after one and two wrong answers; `lookBack` is shown on the Explanation page |
+| `why` | One sentence on why the pattern matters in the real world |
+| `cite` | The source for the Explanation, e.g. `Stewart (2017)`; it must be in the README references |
+| `anim` | An animation on the Explanation page: `reflect`, `rotate`, or `ratioGraph` |
+| `extras` | Extra Figures on the Explanation page, e.g. `[{ "sides": 3, "label": "Triangles: 6 × 60° = 360°" }]` (tilings) |
+| `tryIt` | A hands-on version of the Figure in the Battle: `reflect`, `rotate`, `tiles`, or `spirals` |
+
+Figure types: `butterfly` (`right`: `missing`, `mirror`, `copy`, `rotate`, `spots`), `snowflake` (`arms`, `missing`), `tiles` (`sides`), `honeycomb`, `sunflower`, `ratios`, `trio`, `polygon` (`sides`, `angle`), `sequence` (`terms`), `fraction` (`a`, `b`).
+
 Use Unicode for math symbols, not LaTeX: ° × ÷ ≈ ≠ φ √ ½.
 
 ## A complete example

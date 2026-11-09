@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pattern Detectives</title>
+<meta name="description" content="A Pokémon-style puzzle game about mathematics as a science of patterns, made for MATH 10.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main id="screen">
+  <canvas id="map" width="240" height="160" aria-label="Game map. Use the arrow keys or click to walk."></canvas>
+  <div id="hud" hidden><span class="where"></span><button id="menuBtn">Menu</button></div>
+  <div id="battle" hidden></div>
+  <div id="page" hidden></div>
+  <div id="overlay" hidden></div>
+  <button id="mute" title="Sound on or off (M)">Sound on</button>
+  <div id="toast" role="status" hidden></div>
+  <div id="box" role="status" aria-live="polite" hidden>
+    <canvas class="face" width="16" height="16" aria-hidden="true" hidden></canvas>
+    <div class="txt"><p></p><div class="choices" hidden></div></div><span class="more" aria-hidden="true">▼</span>
+  </div>
+  <div id="fx" hidden></div>
+</main>
+<div id="pad">
+  <div class="dpad"><span></span><button data-k="ArrowUp" aria-label="Up">▲</button><span></span>
+    <button data-k="ArrowLeft" aria-label="Left">◀</button><span></span><button data-k="ArrowRight" aria-label="Right">▶</button>
+    <span></span><button data-k="ArrowDown" aria-label="Down">▼</button><span></span></div>
+  <button class="b" id="padB" aria-label="Hold to fast-forward text">B</button>
+  <button class="a" data-k="Enter" aria-label="A: talk or continue">A</button>
+</div>
+<p class="help">Arrow keys or WASD to walk · click the map to walk there · Enter to talk · Esc for the menu · hold X to fast-forward</p>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
