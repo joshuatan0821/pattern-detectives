@@ -170,7 +170,8 @@ export function drawLock(c, X, Y) { c.fillStyle = "rgba(20,30,40,.45)"; c.fillRe
 export function drawStar(c, X, Y) { px(c, OUTLINE, X + 11, Y, 5, 5); px(c, "#f8d030", X + 12, Y + 1, 3, 3); }
 
 // ---------- buildings ----------
-const LETTERS = { L: ["100", "100", "100", "100", "111"], A: ["010", "101", "111", "101", "101"], B: ["110", "101", "110", "101", "110"] };
+const LETTERS = { L: ["100", "100", "100", "100", "111"], A: ["010", "101", "111", "101", "101"], B: ["110", "101", "110", "101", "110"],
+  S: ["011", "100", "010", "001", "110"], O: ["010", "101", "101", "101", "010"], M: ["101", "111", "101", "101", "101"] };
 function word(c, text, X, Y, col) { [...text].forEach((ch, i) => LETTERS[ch].forEach((row, y) => [...row].forEach((b, x) => b === "1" && px(c, col, X + i * 4 + x, Y + y, 1, 1)))); }
 export function drawLab(c, X, Y) { // 3 × 2 tiles with the door in the middle of the bottom row
   oval(c, X + 24, Y + 31, 26, 3, "rgba(0,0,0,.2)");
@@ -181,7 +182,7 @@ export function drawLab(c, X, Y) { // 3 × 2 tiles with the door in the middle o
   for (let r = 0; r < 6; r++) px(c, "#dcd6c8", X + 1, Y + 14 + r * 3, 46, 1); // siding
   for (const wx of [4, 34]) { px(c, OUTLINE, wx + X - 1, Y + 15, 12, 9); px(c, "#78b8e8", wx + X, Y + 16, 10, 7); px(c, "#c8e8f8", wx + X + 1, Y + 17, 3, 2); px(c, "#f2efe6", wx + X + 5, Y + 16, 1, 7); }
   px(c, OUTLINE, X + 18, Y + 19, 12, 13); px(c, "#6b4a2a", X + 19, Y + 20, 10, 12); px(c, "#8a6040", X + 19, Y + 20, 10, 1); px(c, "#f0c040", X + 26, Y + 26, 1, 1);
-  px(c, OUTLINE, X + 15, Y + 13, 18, 7); px(c, "#2850a0", X + 16, Y + 14, 16, 5); word(c, "LAB", X + 19, Y + 14, "#ffffff");
+  px(c, OUTLINE, X + 15, Y + 13, 18, 7); px(c, "#2850a0", X + 16, Y + 14, 16, 5); word(c, "SOM", X + 19, Y + 14, "#ffffff"); // the JGSOM building, home of SOM 304
 }
 export function drawStore(c, X, Y) { // the JSEC food stall, 2 × 2 tiles, with snacks hanging in the window
   oval(c, X + 16, Y + 31, 17, 3, "rgba(0,0,0,.2)");
@@ -211,7 +212,7 @@ const SCENES = [
   { sky: ["#8fd3f4", "#d8f2fb"], far: "#86c890", ground: "#a8d880", top: "#c4e8a0", rim: "#6aa848" }, // JGSOM Garden
   { sky: ["#f6c870", "#fdf0c8"], far: "#e0b050", ground: "#e8cf78", top: "#f6e4a0", rim: "#b8902c" }, // Leong Hive
   { sky: ["#9ad8f0", "#eaf7fc"], far: "#9cc850", ground: "#cfe08a", top: "#e2f0a8", rim: "#94b040" }, // the Golden Arete
-  { sky: ["#c8b898", "#e8e0d0"], far: "#8a7a68", ground: "#d8c8a8", top: "#e8dcc0", rim: "#b0a080" }, // the Math Department
+  { sky: ["#c8b898", "#e8e0d0"], far: "#8a7a68", ground: "#d8c8a8", top: "#e8dcc0", rim: "#b0a080" }, // SOM 304
 ];
 export function drawBattleBg(c, w, h, level) {
   const s = SCENES[Math.min(level, 3)], horizon = h * 0.52, indoor = level >= 3;

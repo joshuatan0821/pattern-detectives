@@ -6,5 +6,5 @@ PNG exports of the game's maps and character sprites. The art itself is drawn in
 | --- | --- |
 | `characters.png` | Every character, in all four directions, standing and in both walking frames (16 × 16 px, shown 6×) |
 | `map-town.png` | The Ateneo campus, the hub |
-| `map-lab.png` | The Math Department, inside |
+| `map-lab.png` | SOM 304, Sir Durwin's classroom in JGSOM |
 | `map-garden.png`, `map-hive.png`, `map-field.png` | The three Levels |

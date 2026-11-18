@@ -101,11 +101,11 @@ export const MAPS = {
     ],
     warps: { "3,1": { to: "garden", x: 8, y: 8, dir: "up", level: 0 }, "8,1": { to: "hive", x: 8, y: 8, dir: "up", level: 1 },
              "13,1": { to: "field", x: 8, y: 8, dir: "up", level: 2 }, "5,7": { to: "lab", x: 7, y: 7, dir: "up" } },
-    signs: { "7,4": "ATENEO DE MANILA. Math Department ↓ · Levels ↑ · One Big Fight!",
+    signs: { "7,4": "ATENEO DE MANILA. JGSOM (SOM 304) ↓ · Levels ↑ · One Big Fight!",
              "9,2": "← JGSOM GARDEN · LEONG HIVE ↑ · THE GOLDEN ARETE →" },
   },
   lab: {
-    name: "Math Department", pal: "lab",
+    name: "SOM 304", pal: "lab",
     rows: [
       "WWWWWWWWWWWWWWW",
       "WKKKKAAAAAKKKKW",
@@ -138,7 +138,7 @@ export const FACTS = [
 
 // ---------- dialogue ----------
 export const INTRO_LINES = [
-  "SIR DURWIN: Ah, you're here! Welcome to the Math Department of the Ateneo.",
+  "SIR DURWIN: Ah, you're here! Welcome to SOM 304, our classroom here in JGSOM.",
   "SIR DURWIN: I'm SIR DURWIN, but people call me the Pattern Professor.",
   "SIR DURWIN: Something strange is happening. The campus's patterns are getting scrambled!",
   "SIR DURWIN: Rabbit counts that don't add up, floors full of gaps, golden rectangles drawn on everything...",

@@ -51,7 +51,7 @@ function levelDone(level) {
   show("map"); SFX.badge();
   say([`${S.name} earned the ${BADGES[level]}!`, `${LEVELS[level].name}: ${stars(level)} (${firsts} of ${steps} on the first try)`,
        `The patterns of ${LEVELS[level].name} are back in order!`], () =>
-    choice(S.badges === 3 ? "All three badges! Hurry back to SIR DURWIN?" : "Hurry back to the Math Department?", ["Yes", "No"], (i) => { if (i === 0) goHome(); }));
+    choice(S.badges === 3 ? "All three badges! Hurry back to SIR DURWIN?" : "Hurry back to SOM 304?", ["Yes", "No"], (i) => { if (i === 0) goHome(); }));
 }
 
 // ---------- the battle itself ----------

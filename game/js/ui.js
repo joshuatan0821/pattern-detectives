@@ -93,20 +93,8 @@ export function updateMute() { $("#mute").textContent = settings.muted ? "Sound 
 export function toggleMute() { settings.muted = !settings.muted; updateMute(); saveGlobal(); }
 export function title() {
   document.body.classList.toggle("big", settings.bigText); updateMute(); playMusic("title");
-  const saves = [...Array(SLOTS).keys()].map(readSlot);
-  page(`<div class="page title"><canvas class="tsun" width="360" height="180" aria-hidden="true"></canvas><h1>Pattern Detectives</h1>
-    <p>A pattern-finding adventure at the Ateneo</p>
-    <div class="row"><button id="new">New game</button>${saves.some(Boolean) ? '<button id="cont">Continue</button>' : ""}<button id="speed">Speed battle</button></div>
-    <div class="row small"><button id="demo">Demo mode</button><button id="ach">Achievements</button><button id="ctrl">Controls</button><button id="sets">Settings</button><button id="stats">Playtest data</button></div></div>`);
-  runAnim(pageEl.querySelector(".tsun"), "title");
+  page(`<div class="page title"><div class="row"><button id="new">New game</button></div></div>`);
   $("#new").onclick = () => { audioOn(); SFX.select(); slots("new"); };
-  if ($("#cont")) $("#cont").onclick = () => { audioOn(); SFX.select(); slots("load"); };
-  $("#speed").onclick = () => { audioOn(); speedBattle(); };
-  $("#demo").onclick = () => { audioOn(); demo(); };
-  $("#ach").onclick = () => achievementsPage(title);
-  $("#ctrl").onclick = () => controls(title);
-  $("#sets").onclick = () => { audioOn(); settingsPage(title); };
-  $("#stats").onclick = () => playtestPage(title);
 }
 function slots(mode) {
   const saves = [...Array(SLOTS).keys()].map(readSlot);
