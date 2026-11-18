@@ -245,12 +245,12 @@ export function drawBadge(c, i, on) {
   c.save(); c.translate(32, 32); c.fillStyle = col; c.strokeStyle = dark; c.lineWidth = 3; c.beginPath();
   if (i === 0) c.arc(0, 0, 25, 0, 7);
   if (i === 1) for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3; c.lineTo(26 * Math.cos(a), 26 * Math.sin(a)); }
-  if (i === 2) c.rect(-27, -17, 54, 34); // 54 ÷ 34 ≈ φ
+  if (i === 2) c.rect(-24, -24, 48, 48);
   c.closePath(); c.fill(); c.stroke();
   c.beginPath(); c.lineWidth = 2;
   if (i === 0) for (let t = 0; t < 12; t += 0.2) { const r = 1.6 * Math.exp(0.22 * t); c.lineTo(r * Math.cos(t), r * Math.sin(t)); }
-  if (i === 1) for (let k = 0; k < 3; k++) { const a = Math.PI / 2 + k * 2 * Math.PI / 3; c.moveTo(0, 0); c.lineTo(15 * Math.cos(a), 15 * Math.sin(a)); }
-  if (i === 2) { c.moveTo(7, -17); c.lineTo(7, 17); c.moveTo(7, -4); c.lineTo(27, -4); } // cut off a square, then another
+  if (i === 1) { c.moveTo(-13, 0); c.lineTo(13, 0); c.moveTo(6, -7); c.lineTo(13, 0); c.lineTo(6, 7); } // p → q
+  if (i === 2) for (const [x, h] of [[-14, 10], [-2, 22], [10, 15]]) { c.rect(x, 16 - h, 8, h); } // a little bar chart
   c.stroke();
   if (on) { c.fillStyle = "rgba(255,255,255,.45)"; c.beginPath(); c.ellipse(-8, -10, 6, 3, -0.6, 0, 7); c.fill(); } // shine
   c.restore();
@@ -370,7 +370,7 @@ export const FIG = {
     if (f.hl) { ctx.strokeStyle = COL.hl; ctx.lineWidth = 3; ctx.strokeRect(w * 0.18, 4 * h / 4.6 - h / 6, w * 0.64, h / 4.6); }
   },
   trio(ctx, w, h) {
-    const parts = [["rabbits", { months: 4, small: true }], ["honeycomb", {}], ["sunflower", {}]], cw = w / 3;
+    const parts = [["rabbits", { months: 4, small: true }], ["honeycomb", {}], ["dotplot", { sets: [{ name: "", values: [65, 70, 75, 80, 410] }], small: true }]], cw = w / 3;
     parts.forEach(([t, f], i) => {
       ctx.save(); ctx.translate(i * cw + 4, 4); ctx.beginPath(); ctx.rect(0, 0, cw - 8, h - 8); ctx.clip();
       FIG[t](ctx, cw - 8, h - 8, f); ctx.restore();
@@ -410,6 +410,48 @@ export const FIG = {
       if (dir === 0) { x += s; rw -= s; } else if (dir === 1) { y += s; rh -= s; } else if (dir === 2) rw -= s; else rh -= s;
     }
     ctx.textAlign = "center"; label(ctx, f.hl ? "long side ÷ short side = φ in every rectangle" : "long side ÷ short side ≈ 1.618", w / 2, h - 4, Math.round(h / 12), COL.ink);
+  },
+  logic(ctx, w, h, f) { // statements on a card: "p: …", "q: …", then the rule in symbols
+    const n = f.lines.length;
+    let size = Math.round(h / (n + 2.2));
+    ctx.font = `${size}px Georgia`;
+    const widest = () => Math.max(...f.lines.map((l) => ctx.measureText(l).width));
+    while (widest() > w - 28 && size > 9) { size--; ctx.font = `${size}px Georgia`; }
+    ctx.fillStyle = "#fffaf0"; ctx.strokeStyle = COL.ink; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(6, 6, w - 12, h - 12, 8); ctx.fill(); ctx.stroke();
+    f.lines.forEach((line, i) => {
+      const y = (i + 1) * (h - 12) / (n + 1) + 6 + size / 3, last = i === n - 1;
+      ctx.textAlign = last ? "center" : "left";
+      label(ctx, line, last ? w / 2 : 16, y, last ? Math.round(size * 1.15) : size, last ? COL.hl : i === f.hl ? COL.hl : COL.ink);
+    });
+  },
+  dotplot(ctx, w, h, f) { // one row of stacked dots per data set, on a shared number line
+    if (!f.small) { ctx.fillStyle = "#fffaf0"; ctx.strokeStyle = COL.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(1, 1, w - 2, h - 2, 8); ctx.fill(); ctx.stroke(); }
+    const all = f.sets.flatMap((d) => d.values), lo = Math.min(...all), hi = Math.max(...all), pad = (hi - lo) * 0.06 || 5;
+    const L = f.small ? 10 : 34, R = w - 16, x = (v) => L + (R - L) * (v - lo + pad) / (hi - lo + 2 * pad);
+    const rows = f.sets.length, rh = (h - (f.small ? 10 : 30)) / rows, r = Math.max(2.5, Math.min(rh / 7, w / 70));
+    f.sets.forEach((d, k) => {
+      const base = (k + 1) * rh - r;
+      ctx.strokeStyle = "#9aa3ad"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, base + r + 1); ctx.lineTo(R, base + r + 1); ctx.stroke();
+      if (!f.small && d.name) { ctx.textAlign = "left"; label(ctx, d.name, 4, base + r * 0.5, Math.round(Math.min(rh * 0.38, 16)), COL.ink); }
+      const columns = []; // a dot that would overlap an earlier column stacks on top of it, so close values stay visible
+      for (const v of [...d.values].sort((a, b) => a - b)) {
+        let col = columns.find((c) => Math.abs(c.x - x(v)) < r * 2.2);
+        if (!col) columns.push((col = { x: x(v), n: 0 }));
+        ctx.beginPath(); ctx.arc(col.x, base - col.n++ * r * 2.1, r, 0, 7); ctx.fillStyle = COL.ice; ctx.fill();
+      }
+      if (rows === 1 && !f.small) { ctx.textAlign = "center"; label(ctx, d.values.join(",  "), w / 2, 26, Math.round(Math.min(h / 9, 20)), COL.ink); }
+      if (f.hl && !f.small) { // mark the mean (dashed) and, for one set, the median
+        const mean = d.values.reduce((a, b) => a + b, 0) / d.values.length;
+        dashed(ctx, x(mean), base - rh * 0.7, x(mean), base + r);
+        ctx.textAlign = "center"; label(ctx, `mean ${+mean.toFixed(2)}`, x(mean), base - rh * 0.72, 12);
+      }
+    });
+    if (!f.small) { // number line labels under the last row
+      ctx.textAlign = "center"; const y = h - 8;
+      let last = -99;
+      for (const v of [...new Set(all)].sort((a, b) => a - b)) if (x(v) - last >= 24) { label(ctx, String(v), x(v), y, 12, COL.ink); last = x(v); } // skip labels that would overlap
+    }
   },
   polygon(ctx, w, h, f) {
     const n = f.sides, R = Math.min(w, h) * 0.38;
@@ -456,7 +498,9 @@ export function describe(f) {
     case "honeycomb": return "Honeycomb with a marked point where three cells meet";
     case "sunflower": return "Sunflower head with seeds arranged in spirals";
     case "ratios": return "The ratios 8 ÷ 5, 13 ÷ 8, 21 ÷ 13, and 34 ÷ 21";
-    case "trio": return "Rabbit pairs, a honeycomb, and a sunflower";
+    case "trio": return "Rabbit pairs, a honeycomb, and a dot plot of lunch prices";
+    case "logic": return f.lines.join(" ");
+    case "dotplot": return f.sets.map((d) => `${d.name}: ${d.values.join(", ")}`).join("; ");
     case "rabbits": return `Rabbit pairs counted month by month for ${f.months} months, then a question mark`;
     case "goldenRect": return "A golden rectangle split into a square and a smaller golden rectangle, again and again, with a spiral";
     case "polygon": return `A regular ${POLY[f.sides]}`;

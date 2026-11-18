@@ -236,7 +236,7 @@ export function playtestPage(back = title) { // numbers for the progress report,
   wireBack(back);
 }
 function demo() { // for the live presentation: start at any Level with the earlier badges already earned
-  const spots = [["JGSOM Garden", 0, "garden", 8, 8], ["Leong Hive", 1, "hive", 8, 8], ["The Golden Arete", 2, "field", 8, 8], ["Final battle", 3, "lab", 8, 4]];
+  const spots = [["JGSOM Garden", 0, "garden", 8, 8], ["Leong Hive", 1, "hive", 8, 8], ["Gonzaga", 2, "field", 8, 8], ["Final battle", 3, "lab", 8, 4]];
   page(`<div class="page title"><h1>Demo mode</h1><p>Jump straight to a Level as CHIPPY. Earlier badges are given to you, and nothing is saved.</p>
     <div class="row">${spots.map(([n], i) => `<button data-i="${i}">${n}</button>`).join("")}</div>${closeRow("Back")}</div>`);
   pageEl.querySelectorAll("button[data-i]").forEach((b) => (b.onclick = () => {

@@ -1,81 +1,124 @@
 {
   "level": 3,
-  "name": "The Golden Arete",
-  "setting": "The golden ratio and the golden angle",
+  "name": "Gonzaga",
+  "setting": "Basic statistics: averages and spread",
   "steps": [
     {
       "id": "l3s1",
-      "topic": "The golden ratio",
-      "foe": "GOLDEN RATIO",
-      "effect": "The golden ratio is super effective!",
-      "question": "Divide each Fibonacci number by the one before it. What do the answers get closer to?",
+      "topic": "Measures of central tendency",
+      "foe": "OUTLIER",
+      "effect": "The median is super effective!",
+      "question": "Pau wrote down five lunch prices at Gonzaga (₱): 65, 70, 75, 80, 410. Someone bought a party tray. Which average best describes a typical lunch?",
       "figure": {
-        "type": "ratios"
+        "type": "dotplot",
+        "sets": [
+          {
+            "name": "₱",
+            "values": [
+              65,
+              70,
+              75,
+              80,
+              410
+            ]
+          }
+        ]
       },
       "options": [
         {
-          "text": "About 1.618",
+          "text": "The median, ₱75",
           "correct": true
         },
         {
-          "text": "2",
-          "whyWrong": "Each number is less than double the one before (34 < 2 × 21), so the ratio stays below 2."
+          "text": "The mean, ₱140",
+          "whyWrong": "The mean is (65 + 70 + 75 + 80 + 410) ÷ 5 = ₱140, which is more than four of the five lunches. The outlier 410 pulls it up."
         },
         {
-          "text": "1.5",
-          "whyWrong": "3/2 = 1.5 is an early ratio, but later ones settle above it: 1.6, 1.625, 1.615…"
+          "text": "The mode",
+          "whyWrong": "No price appears more than once, so this data set has no mode."
         },
         {
-          "text": "They keep growing forever",
-          "whyWrong": "The numbers grow, but their ratio settles down, bouncing closer and closer to one number."
+          "text": "The range, ₱345",
+          "whyWrong": "The range (410 − 65 = 345) measures spread, not the center. It tells you how far apart the prices are, not what a typical lunch costs."
         }
       ],
-      "hint": "Work out 34 ÷ 21 and compare it with the ratios already shown.",
+      "hint": "One price is far from the rest. Which average does one extreme value pull the most?",
       "polya": {
-        "understand": "You're dividing each Fibonacci number by the one just before it.",
-        "plan": "Work out 34 ÷ 21, then compare it with 1.6, 1.625, and 1.615.",
-        "lookBack": "The answers bounce above and below 1.618 and get closer every time."
+        "understand": "You want one number for a typical lunch. One value, 410, is an outlier.",
+        "plan": "Find the mean and the median, then see which one is closer to most of the prices.",
+        "lookBack": "Mean = 700 ÷ 5 = 140; median = 75 (the middle value when sorted). Four of the five prices are near 75."
       },
-      "explanation": "The ratios 8/5 = 1.6, 13/8 = 1.625, 21/13 ≈ 1.615, 34/21 ≈ 1.619 approach the golden ratio φ = (1 + √5) / 2 ≈ 1.618. It is closely tied to the golden angle that sunflowers use to place their seeds.",
-      "why": "The golden angle, about 137.5°, comes from φ, and it is the turn a sunflower makes between one seed and the next.",
-      "cite": "Knott (n.d.)",
-      "anim": "ratioGraph"
+      "explanation": "The median is the middle value of the sorted data: 65, 70, 75, 80, 410, so it's ₱75. The mean, ₱140, uses every value, so the outlier 410 drags it up above almost every lunch. The mean is sensitive to extreme values; the median and mode are not.",
+      "why": "Reports about incomes and prices often use the median for exactly this reason: a few very large values can make the mean misleading.",
+      "cite": "Bataller et al. (2019)"
     },
     {
       "id": "l3s2",
-      "topic": "Golden ratio myths",
-      "foe": "GOLDEN MYTH",
-      "effect": "Careful checking is super effective!",
-      "question": "A video draws golden rectangles on a famous painting and says φ is the secret formula for beauty. What is the best response?",
+      "topic": "Measures of dispersion",
+      "foe": "SAME MEAN",
+      "effect": "Spread is super effective!",
+      "question": "Zach timed orders (in seconds) at three Gonzaga stalls. All three have a mean of 35. Which statement is true?",
       "figure": {
-        "type": "goldenRect"
+        "type": "dotplot",
+        "sets": [
+          {
+            "name": "A",
+            "values": [
+              35,
+              35,
+              35,
+              35,
+              35
+            ]
+          },
+          {
+            "name": "B",
+            "values": [
+              25,
+              35,
+              35,
+              35,
+              45
+            ]
+          },
+          {
+            "name": "C",
+            "values": [
+              10,
+              25,
+              35,
+              45,
+              60
+            ]
+          }
+        ]
       },
       "options": [
         {
-          "text": "It's exaggerated: the boxes can be drawn to fit",
+          "text": "Stall C is the most spread out: range 50",
           "correct": true
         },
         {
-          "text": "It's proven: beautiful things all contain φ",
-          "whyWrong": "There is no such proof. The same painting can be boxed in different ways to 'find' φ, so the drawing doesn't prove anything."
+          "text": "All three are the same, since the means match",
+          "whyWrong": "The averages match, but the data don't. Stall A never varies, while Stall C goes from 10 to 60 seconds."
         },
         {
-          "text": "φ is 1.5, so it can't be in paintings",
-          "whyWrong": "φ ≈ 1.618, not 1.5. The problem with the claim isn't the number. It's the weak evidence."
+          "text": "Stall A is the most spread out",
+          "whyWrong": "Every value in A is 35, so its range, standard deviation, and variance are all 0. It has no spread at all."
         },
         {
-          "text": "Golden rectangles don't exist",
-          "whyWrong": "They do. Any rectangle whose long side ÷ short side is φ is a golden rectangle. The myth is the claim about beauty, not the shape."
+          "text": "Stall B has the biggest range",
+          "whyWrong": "B's range is 45 − 25 = 20. C's range is 60 − 10 = 50, so C is more spread out."
         }
       ],
-      "hint": "Could you draw the boxes a different way on the same painting and still 'find' φ?",
+      "hint": "Range = highest value − lowest value. Work it out for each stall.",
       "polya": {
-        "understand": "The claim is that φ measures beauty, and the evidence is rectangles drawn on top of a picture.",
-        "plan": "Ask whether the rectangles come from the picture itself, or from where someone chose to draw them.",
-        "lookBack": "If the same picture can be boxed in many ways, the boxes show the drawer's choice, not a law of beauty."
+        "understand": "The three stalls have the same mean, 35. The question is about how spread out the times are.",
+        "plan": "Find each stall's range: highest minus lowest.",
+        "lookBack": "Ranges: A = 0, B = 20, C = 50. The standard deviations agree: 0, about 6.32, and about 17.03."
       },
-      "explanation": "A golden rectangle has sides in the ratio φ ≈ 1.618, and cutting a square off it leaves a smaller golden rectangle. That part is real mathematics. Claims that φ is a measure of beauty are greatly exaggerated: the lines are often placed to fit the claim. Using φ in your own designs is fine; using it to judge people's faces or bodies is not.",
-      "why": "Mathematics is also a tool for checking claims, including claims that say they are backed by mathematics.",
+      "explanation": "A measure of center alone can't tell these stalls apart: all three have mean and median 35. Measures of dispersion can. The ranges are 0, 20, and 50, and the standard deviations are 0, about 6.32, and about 17.03, so Stall C's times are the most spread out.",
+      "why": "Two stalls with the same average wait can feel very different. Knowing the spread tells you how much you can trust the average.",
       "cite": "Bataller et al. (2019)"
     }
   ]

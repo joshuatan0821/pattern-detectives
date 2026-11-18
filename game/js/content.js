@@ -14,7 +14,7 @@ export async function loadLevels() {
 }
 export const totalSteps = () => LEVELS.reduce((n, l) => n + l.steps.length, 0);
 export const stepKey = (level, step) => `${level}-${step}`;
-export const BADGES = ["Fibonacci Badge", "Hexagon Badge", "Golden Ratio Badge"];
+export const BADGES = ["Fibonacci Badge", "Logic Badge", "Statistics Badge"];
 
 // ---------- people ----------
 export const DURWIN = { hat: "#b8b8c0", shirt: "#f8f8f8", pants: "#404858", glasses: true, coat: true };
@@ -53,13 +53,13 @@ export const PEOPLE = [
   student("toby", "garden", 10, 3, "down", 1, 0, 1, "TOBY", look("#402818", "#50a070", "#303840"),
     "I was supposed to be studying, but these flower spirals are more interesting. What comes next?", "Twenty-one, thirty-four, fifty-five. Nice!"),
   student("chloe", "hive", 6, 5, "right", 2, 1, 0, "CHLOE", look("#202020", "#f0d040", "#5a4630"),
-    "Facilities asked me to retile Leong. Which tile leaves no gaps?", "No gaps, no overlaps. Nice!"),
+    "I made a rule about the bees. Can you find the one cell that would break it?", "Only p true and q false. Got it!"),
   student("ethan", "hive", 10, 3, "down", 1, 1, 1, "ETHAN", look("#704020", "#d05030", "#303840"),
-    "The bees here pay no rent, but they do know their angles. Do you?", "Buzz! You cracked the honeycomb."),
+    "Everyone mixes up the converse and the contrapositive. Do you?", "Buzz! Contrapositive it is."),
   student("pau", "field", 6, 5, "right", 2, 2, 0, "PAU", look("#f0d060", "#60a0e0", "#404858"),
-    "Art majors love this number. Let's divide some Fibonacci numbers!", "1.618... I'm putting that in my next painting."),
+    "I'm doing a stats project on Gonzaga lunch prices. Help me pick the right average?", "The median! That party tray was skewing everything."),
   student("zach", "field", 10, 3, "down", 1, 2, 1, "ZACH", look("#303030", "#a060c0", "#5a4630"),
-    "My org's pubs say the golden ratio is the secret of beauty. True?", "Okay, I'll stop drawing rectangles on everyone's faces."),
+    "Three stalls, same average wait. Same experience, right?", "Okay, the range tells the real story."),
 ];
 const SPEAKERS = { "SIR DURWIN": DURWIN, RIONA: PEOPLE[1].look, ENNIO: PEOPLE[2].look, VENICE: look("#402818", "#e06080", "#304060"),
   [RIVAL.label]: RIVAL.look, ...Object.fromEntries(PEOPLE.filter((p) => p.student).map((p) => [`STUDENT ${p.student.name}`, p.look])) };
@@ -102,7 +102,7 @@ export const MAPS = {
     warps: { "3,1": { to: "garden", x: 8, y: 8, dir: "up", level: 0 }, "8,1": { to: "hive", x: 8, y: 8, dir: "up", level: 1 },
              "13,1": { to: "field", x: 8, y: 8, dir: "up", level: 2 }, "5,7": { to: "lab", x: 7, y: 7, dir: "up" } },
     signs: { "7,4": "ATENEO DE MANILA. JGSOM (SOM 304) ↓ · Levels ↑ · One Big Fight!",
-             "9,2": "← JGSOM GARDEN · LEONG HIVE ↑ · THE GOLDEN ARETE →" },
+             "9,2": "← JGSOM GARDEN · LEONG HIVE ↑ · GONZAGA →" },
   },
   lab: {
     name: "SOM 304", pal: "lab",
@@ -122,8 +122,8 @@ export const MAPS = {
     signs: {},
   },
   garden: levelMap("JGSOM Garden", 0, 3, "JGSOM GARDEN. Even the rabbits here understand compound growth."),
-  hive: levelMap("Leong Hive", 1, 8, "LEONG HIVE. Formerly Leong Hall. The bees signed the lease first."),
-  field: levelMap("The Golden Arete", 2, 13, "THE GOLDEN ARETE. Home of the arts, and of people who draw golden rectangles on everything."),
+  hive: levelMap("Leong Hive", 1, 8, "LEONG HIVE. Formerly Leong Hall. If you are a bee, then you may enter."),
+  field: levelMap("Gonzaga", 2, 13, "GONZAGA. Where the average lunch costs more than the median one."),
 };
 export const HOME = { map: "lab", x: 8, y: 4, dir: "up" }; // right in front of Sir Durwin
 export const SIGN_COUNT = Object.values(MAPS).reduce((n, m) => n + Object.keys(m.signs).length, 0);
@@ -132,8 +132,8 @@ export const SIGN_COUNT = Object.values(MAPS).reduce((n, m) => n + Object.keys(m
 export const FACTS = [
   { id: "galileo", map: "town", x: 12, y: 8, text: "Galileo wrote that the book of nature is written in the language of mathematics." },
   { id: "petals", map: "garden", x: 7, y: 1, text: "Lilies have 3 petals, buttercups 5, and many daisies 21 or 34. Not every flower, but a lot of them land on Fibonacci numbers." },
-  { id: "wax", map: "hive", x: 7, y: 1, text: "Bees use honey to make wax, so building with less wall saves them food." },
-  { id: "pinecone", map: "field", x: 7, y: 1, text: "Pinecones and pineapples show spiral counts like 8 and 13: neighbouring Fibonacci numbers." },
+  { id: "boole", map: "hive", x: 7, y: 1, text: "George Boole popularised using letters like p and q for statements, which makes logic short to write." },
+  { id: "spread", map: "field", x: 7, y: 1, text: "Same mean, very different data: always check the spread (range or standard deviation) too." },
 ];
 
 // ---------- dialogue ----------
@@ -141,7 +141,7 @@ export const INTRO_LINES = [
   "SIR DURWIN: Ah, you're here! Welcome to SOM 304, our classroom here in JGSOM.",
   "SIR DURWIN: I'm SIR DURWIN, but people call me the Pattern Professor.",
   "SIR DURWIN: Something strange is happening. The campus's patterns are getting scrambled!",
-  "SIR DURWIN: Rabbit counts that don't add up, floors full of gaps, golden rectangles drawn on everything...",
+  "SIR DURWIN: Rabbit counts that don't add up, bees breaking their own rules, averages that lie...",
   "SIR DURWIN: Now, which of my three assistant Researchers is reporting for duty today?",
 ];
 export const startLines = (name) => [
@@ -155,18 +155,18 @@ export const TALK = {
   durwin: [
     ["SIR DURWIN: Two students are waiting in the JGSOM Garden, up the path to the west.", "SIR DURWIN: Win both pattern battles to earn the Fibonacci Badge!"],
     ["SIR DURWIN: Splendid! The Garden's patterns are back. Two more students wait at Leong Hive, straight north."],
-    ["SIR DURWIN: Two badges already! The last students are at the Golden Arete to the north-east."],
+    ["SIR DURWIN: Two badges already! The last students are at Gonzaga to the north-east."],
   ],
   riona: [
     ["RIONA: My blockmate's pet rabbits multiply so fast. Each month is the last two months added together!"],
-    ["RIONA: The bees at Leong never leave gaps. Count the corners where their cells meet."],
-    ["RIONA: Some say the golden ratio is the secret of beauty. Check the claim before you believe it."],
+    ["RIONA: An if-then rule is only broken one way: the \"if\" happens, but the \"then\" doesn't."],
+    ["RIONA: One huge value can drag the mean way up. The median barely moves."],
     ["RIONA: The campus patterns look right again. Gonzaga run to celebrate?"],
   ],
   ennio: [
     ["ENNIO: The JGSOM Garden people are counting rabbits. Very on-brand: it's all about growth."],
-    ["ENNIO: I'm a Bio major. I look after the bees at Leong. They fit three cells around every corner!"],
-    ["ENNIO: Thanks for unscrambling the hive! Over at Arete, it's all about 1.618."],
+    ["ENNIO: I'm a Bio major. I look after the bees at Leong. Every honeybee cell is a hexagon, but not every hexagon is a honeybee cell!"],
+    ["ENNIO: Thanks for unscrambling the hive! Over at Gonzaga, they're arguing about averages."],
     ["ENNIO: Thanks for unscrambling the hive!"],
   ],
 };
@@ -175,17 +175,18 @@ export const STORE_LINES = {
   later: ["VENICE: Ingat! And don't skip lunch."],
 };
 export const JEEP_LINES = ["The IKOT jeep is parked here. It goes around campus forever, like a loop with no end condition."];
-export const ENDING_LINES = ["Five plus three makes eight pairs. Well counted!", "Twenty-one plus thirty-four!", "No gaps, no overlaps.",
-  "Three corners, 360 degrees.", "The golden ratio, about 1.618.", "And a claim checked, not just believed.", "And the big picture: patterns follow rules."];
+export const ENDING_LINES = ["Five plus three makes eight pairs. Well counted!", "Twenty-one plus thirty-four!", "A full, unsealed cell breaks the rule.",
+  "The contrapositive always agrees.", "The median, not the mean.", "Same average, different spread.", "And the big picture: patterns follow rules."];
 
 // ---------- reference ----------
 export const GLOSSARY = [
-  ["Regular polygon", "A polygon whose sides are all equal and whose angles are all equal."],
-  ["Interior angle", "The angle inside a polygon at one corner. In a regular polygon with n sides, each one is (n − 2) × 180° ÷ n."],
-  ["Tessellation", "A covering of a flat surface by shapes, with no gaps and no overlaps."],
   ["Fibonacci sequence", "1, 1, 2, 3, 5, 8, 13, … Each number after the first two is the sum of the two before it."],
-  ["Golden ratio (φ)", "φ = (1 + √5) ÷ 2 ≈ 1.618. Ratios of neighbouring Fibonacci numbers get closer and closer to it."],
-  ["Golden rectangle", "A rectangle whose long side ÷ short side is φ. Cut a square off it and a smaller golden rectangle is left."],
+  ["Statement", "A sentence that is either true or false, but not both. Questions and opinions are not statements."],
+  ["Conditional (p → q)", "\"If p, then q.\" It is false only when p is true and q is false."],
+  ["Converse, inverse, contrapositive", "For p → q: converse q → p, inverse ~p → ~q, contrapositive ~q → ~p. Only the contrapositive is always equivalent to p → q."],
+  ["De Morgan's laws", "~(p ∧ q) is ~p ∨ ~q, and ~(p ∨ q) is ~p ∧ ~q."],
+  ["Mean, median, mode", "Mean: sum ÷ count. Median: the middle of the sorted data. Mode: the most frequent value. The mean is sensitive to outliers."],
+  ["Range and standard deviation", "Measures of spread. Range = highest − lowest; the standard deviation is about how far values are from the mean on average."],
   ["Golden angle", "About 137.5°. A sunflower turns by this angle between one seed and the next, which makes Fibonacci numbers of spirals."],
   ["Polya's four steps", "Understand the problem, devise a plan, carry out the plan, and look back. The Hints follow these steps."],
 ];

@@ -1,113 +1,91 @@
 {
   "level": 2,
   "name": "Leong Hive",
-  "setting": "Honeycomb and tessellations",
+  "setting": "Bee logic: statements and conditionals",
   "steps": [
     {
       "id": "l2s1",
-      "topic": "Tessellations",
-      "foe": "FLOOR GAP",
-      "effect": "Tiling is super effective!",
-      "question": "Copies of each tile are placed around one corner. Which regular polygon fills the space with no gap?",
+      "topic": "Conditionals",
+      "foe": "IF-THEN RULE",
+      "effect": "Logic is super effective!",
+      "question": "Ethan's rule: \"If a cell is full of honey, then it is sealed with wax.\" Which cell would prove the rule FALSE?",
       "figure": {
-        "type": "tiles",
-        "sides": 5
+        "type": "logic",
+        "lines": [
+          "p: The cell is full of honey.",
+          "q: The cell is sealed with wax.",
+          "Rule: p → q"
+        ]
       },
       "options": [
         {
-          "text": "Hexagon",
-          "figure": {
-            "type": "tiles",
-            "sides": 6
-          },
+          "text": "A full cell that is not sealed",
           "correct": true
         },
         {
-          "text": "Pentagon",
-          "figure": {
-            "type": "tiles",
-            "sides": 5
-          },
-          "whyWrong": "Each pentagon corner is 108°. Three make 324°, leaving a 36° gap."
+          "text": "An empty cell that is sealed",
+          "whyWrong": "Here p is false. The rule only promises something about full cells, so an empty cell can't break it. When p is false, p → q is true."
         },
         {
-          "text": "Octagon",
-          "figure": {
-            "type": "tiles",
-            "sides": 8
-          },
-          "whyWrong": "Each octagon corner is 135°. Two make 270°, leaving a 90° gap."
+          "text": "An empty cell that is not sealed",
+          "whyWrong": "Here p is false too, so the rule makes no claim about this cell. When p is false, p → q is true."
         },
         {
-          "text": "Heptagon",
-          "figure": {
-            "type": "tiles",
-            "sides": 7
-          },
-          "whyWrong": "Each heptagon corner is about 128.6°. Two leave a gap and three overlap."
+          "text": "A full cell that is sealed",
+          "whyWrong": "Here p and q are both true. This cell agrees with the rule, so p → q is true."
         }
       ],
-      "hint": "Tiles meeting at a point must add up to exactly 360°.",
+      "hint": "A conditional only makes a promise when p is true. Look for the cell where p is true but q is false.",
       "polya": {
-        "understand": "Copies of the tile meet at one corner. There must be no gap and no overlap.",
-        "plan": "Find each polygon's corner angle, then check whether a whole number of them makes exactly 360°.",
-        "lookBack": "3 × 120° = 360° for the hexagon, but 3 × 108° = 324° for the pentagon."
+        "understand": "p is \"the cell is full of honey\" and q is \"the cell is sealed with wax\". The rule is p → q.",
+        "plan": "Go through the four cases (p true or false, q true or false). Which one breaks the promise?",
+        "lookBack": "Only p true and q false makes p → q false. In the other three cases the conditional is true."
       },
-      "explanation": "A regular polygon tiles a floor by itself only if its corner angle divides 360° evenly. That works for the triangle (60°), the square (90°) and the hexagon (120°), and for no other regular polygon.",
-      "why": "Floor tiles, paving stones, and woven mats all depend on shapes that fit together with no gaps.",
-      "cite": "Bataller et al. (2019)",
-      "extras": [
-        {
-          "sides": 3,
-          "label": "Triangles: 6 × 60° = 360°"
-        },
-        {
-          "sides": 4,
-          "label": "Squares: 4 × 90° = 360°"
-        },
-        {
-          "sides": 6,
-          "label": "Hexagons: 3 × 120° = 360°"
-        }
-      ],
-      "tryIt": "tiles"
+      "explanation": "A conditional p → q is false in only one case: p is true and q is false. A full cell that isn't sealed breaks the rule. If the cell isn't full, p is false, and the conditional is true no matter what, because the rule says nothing about empty cells.",
+      "why": "All mathematical propositions can be written as conditionals, so knowing when \"if p, then q\" is false is how mathematicians test a claim.",
+      "cite": "Bataller et al. (2019)"
     },
     {
       "id": "l2s2",
-      "topic": "Why hexagons tile",
-      "foe": "HONEYCOMB",
-      "effect": "Angle math is super effective!",
-      "question": "Why do hexagons fit together with no gaps?",
+      "topic": "Statements related to the conditional",
+      "foe": "CONVERSE TRAP",
+      "effect": "The contrapositive is super effective!",
+      "question": "Chloe's true statement: \"If it is a honeybee cell, then it is a hexagon.\" Which statement is ALSO always true?",
       "figure": {
-        "type": "honeycomb"
+        "type": "logic",
+        "lines": [
+          "p: It is a honeybee cell.",
+          "q: It is a hexagon.",
+          "True: p → q"
+        ]
       },
       "options": [
         {
-          "text": "Three 120° corners make exactly 360°",
+          "text": "If it is not a hexagon, it is not a honeybee cell",
           "correct": true
         },
         {
-          "text": "Six sides × 60° = 360°",
-          "whyWrong": "A hexagon's corner is 120°, not 60°. And it's the corners meeting at a point that matter, not the number of sides."
+          "text": "If it is a hexagon, then it is a honeybee cell",
+          "whyWrong": "That's the converse, q → p. A dragonfly's eye is made of hexagons but isn't a honeybee cell, so the converse is false."
         },
         {
-          "text": "Any shape with an even number of sides fits",
-          "whyWrong": "Counterexample: the octagon has 8 sides but leaves gaps."
+          "text": "If it is not a honeybee cell, it is not a hexagon",
+          "whyWrong": "That's the inverse, ~p → ~q. A snowflake isn't a honeybee cell, but it has a hexagon shape, so the inverse is false."
         },
         {
-          "text": "Bees bend the walls until they fit",
-          "whyWrong": "Flat regular hexagons tile perfectly with no bending. The angles alone explain it."
+          "text": "It is a honeybee cell and it is not a hexagon",
+          "whyWrong": "This says p is true and q is false, which is exactly the case that would make the original statement false."
         }
       ],
-      "hint": "Look at the marked point where three cells meet. What is each corner's angle?",
+      "hint": "Flip the statement around AND negate both parts. Which option does that?",
       "polya": {
-        "understand": "Look at one point where cells meet. How many corners touch there?",
-        "plan": "Each corner of a regular hexagon is 120°. Multiply by the number of corners at the point.",
-        "lookBack": "The angles around any point add up to 360°, so 3 × 120° fits perfectly."
+        "understand": "The conditional is p → q. Its relatives are the converse (q → p), the inverse (~p → ~q), and the contrapositive (~q → ~p).",
+        "plan": "Name each option as converse, inverse, or contrapositive. Then try to find a counterexample for each.",
+        "lookBack": "A conditional and its contrapositive are equivalent, so if one is true, so is the other. The converse and inverse can be false."
       },
-      "explanation": "Each corner of a regular hexagon is 120°, and three meet at every point: 3 × 120° = 360°. Hexagons also use the least wall to divide a surface into equal cells (Hales' honeycomb conjecture, proved in 2001), which saves the bees wax. The same six-sided cells show up in a dragonfly's eyes.",
-      "why": "Hexagon cells use the least wax for the space they hold, which saves the bees food.",
-      "cite": "Hales (2001)"
+      "explanation": "\"If it is not a hexagon, then it is not a honeybee cell\" is the contrapositive, ~q → ~p, and a conditional and its contrapositive are always equivalent. The converse and the inverse are equivalent to each other but not to the original, and here both are false: dragonfly eyes and snowflakes have hexagon shapes without being honeybee cells.",
+      "why": "Assuming the converse or inverse is true is one of the most common mistakes in everyday arguments.",
+      "cite": "Bataller et al. (2019)"
     }
   ]
 }

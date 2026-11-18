@@ -6,11 +6,11 @@ It plays like an old Game Boy Advance Pokémon game. The player is an assistant 
 
 | Level | Setting | Mathematics |
 | --- | --- | --- |
-| 1. JGSOM Garden | Fibonacci's rabbits and flower spirals | The Fibonacci sequence and where it shows up in nature |
-| 2. Leong Hive | Honeycomb | Tessellations, and why hexagons fit (3 × 120° = 360°) |
-| 3. The Golden Arete | The golden ratio | Fibonacci ratios approaching φ ≈ 1.618, and checking golden-ratio "beauty" claims |
+| 1. JGSOM Garden | Fibonacci's rabbits and flower spirals | The Fibonacci sequence and where it shows up in nature (Module 1) |
+| 2. Leong Hive | Bee logic | Mathematical statements, conditionals, and the converse, inverse, and contrapositive (Module 2) |
+| 3. Gonzaga | Lunch prices and order times | Mean vs median with an outlier, and measures of spread (Module 4) |
 
-The topics follow Module 1 (Mathematics in the World) of the course, and the Hints follow Polya's four steps from Module 3.
+The topics come from the course notes: Module 1 (patterns in nature), Module 2 (the language of mathematics and logic), and Module 4 (data management). The Hints follow Polya's four steps from Module 3.
 
 Plays in a desktop or phone browser from a link. Our estimate is 15–25 minutes; the game's Playtest data screen measures real times.
 
