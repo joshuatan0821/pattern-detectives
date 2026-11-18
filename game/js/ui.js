@@ -93,7 +93,7 @@ export function updateMute() { $("#mute").textContent = settings.muted ? "Sound 
 export function toggleMute() { settings.muted = !settings.muted; updateMute(); saveGlobal(); }
 export function title() {
   document.body.classList.toggle("big", settings.bigText); updateMute(); playMusic("title");
-  page(`<div class="page title"><div class="row"><button id="new">New game</button></div></div>`);
+  page(`<div class="page title"><h1>Pattern Detectives</h1><div class="row"><button id="new">New game</button></div></div>`);
   $("#new").onclick = () => { audioOn(); SFX.select(); slots("new"); };
 }
 function slots(mode) {
