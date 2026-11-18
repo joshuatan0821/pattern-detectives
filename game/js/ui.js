@@ -95,7 +95,7 @@ export function title() {
   document.body.classList.toggle("big", settings.bigText); updateMute(); playMusic("title");
   const saves = [...Array(SLOTS).keys()].map(readSlot);
   page(`<div class="page title"><canvas class="tsun" width="360" height="180" aria-hidden="true"></canvas><h1>Pattern Detectives</h1>
-    <p>A pattern-finding adventure in Barangay Maligaya</p>
+    <p>A pattern-finding adventure at the Ateneo</p>
     <div class="row"><button id="new">New game</button>${saves.some(Boolean) ? '<button id="cont">Continue</button>' : ""}<button id="speed">Speed battle</button></div>
     <div class="row small"><button id="demo">Demo mode</button><button id="ach">Achievements</button><button id="ctrl">Controls</button><button id="sets">Settings</button><button id="stats">Playtest data</button></div></div>`);
   runAnim(pageEl.querySelector(".tsun"), "title");
@@ -187,8 +187,8 @@ export function badgeCase(back = toMap) {
 }
 export function townMap(back = toMap) {
   const where = { lab: [5, 7], garden: [3, 1], hive: [8, 1], field: [13, 1] }[S.map] || [S.px, S.py];
-  page(`<div class="page note"><div class="proto">Town map</div><h2>Barangay Maligaya</h2>
-    <canvas class="townmap" width="240" height="160" role="img" aria-label="Map of Barangay Maligaya"></canvas>
+  page(`<div class="page note"><div class="proto">Town map</div><h2>Ateneo de Manila</h2>
+    <canvas class="townmap" width="240" height="160" role="img" aria-label="Map of the Ateneo campus"></canvas>
     <p>You are in <b>${MAPS[S.map].name}</b> (the red circle).</p>
     <ul>${LEVELS.slice(0, 3).map((l, i) => `<li>${l.name}: ${i < S.badges ? `restored ${stars(i)}` : i === S.badges ? "next" : "locked"}</li>`).join("")}</ul>${closeRow()}</div>`);
   const c = pageEl.querySelector(".townmap").getContext("2d");
@@ -248,7 +248,7 @@ export function playtestPage(back = title) { // numbers for the progress report,
   wireBack(back);
 }
 function demo() { // for the live presentation: start at any Level with the earlier badges already earned
-  const spots = [["The Garden", 0, "garden", 8, 8], ["The Beehive", 1, "hive", 8, 8], ["The Sunflower Field", 2, "field", 8, 8], ["Final battle", 3, "lab", 8, 4]];
+  const spots = [["JGSOM Garden", 0, "garden", 8, 8], ["Leong Hive", 1, "hive", 8, 8], ["The Golden Arete", 2, "field", 8, 8], ["Final battle", 3, "lab", 8, 4]];
   page(`<div class="page title"><h1>Demo mode</h1><p>Jump straight to a Level as CHIPPY. Earlier badges are given to you, and nothing is saved.</p>
     <div class="row">${spots.map(([n], i) => `<button data-i="${i}">${n}</button>`).join("")}</div>${closeRow("Back")}</div>`);
   pageEl.querySelectorAll("button[data-i]").forEach((b) => (b.onclick = () => {

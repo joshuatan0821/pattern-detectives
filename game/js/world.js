@@ -12,7 +12,7 @@ export const FACING = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] 
 const WALK = new Set([".", ",", "=", "q", "O", "R", "E"]);
 
 const tileAt = (map, x, y) => MAPS[map].rows[y]?.[x] ?? "T";
-const rivalHere = () => S.rivalWins < Math.min(S.badges, 3); // Jamie shows up once after each badge
+const rivalHere = () => S.rivalWins < Math.min(S.badges, 3); // Xander shows up once after each badge
 const peopleOn = (map) => PEOPLE.filter((p) => p.map === map && (p.id !== "rival" || rivalHere()));
 const personAt = (x, y) => peopleOn(S.map).find((p) => p.x === x && p.y === y);
 const warpAt = (x, y) => MAPS[S.map].warps[`${x},${y}`];
@@ -95,7 +95,7 @@ export function goHome() { S.busy = true; fade(() => { goTo(HOME); S.busy = fals
 
 // ---------- people and things ----------
 const ready = (p) => (p.student ? !beaten(p.student.level, p.student.step) && p.student.level <= S.badges : p.id === "rival");
-function spot() { // a student or Jamie who sees you along their line of sight walks over for a battle
+function spot() { // a student or Xander who sees you along their line of sight walks over for a battle
   for (const p of peopleOn(S.map)) {
     if (!p.sight || !ready(p)) continue;
     const [dx, dy] = FACING[p.face];

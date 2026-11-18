@@ -33,10 +33,10 @@ if (q.get("sheet") === "map") {
   const cast = [
     ...Object.entries(CHARS).map(([n, c]) => [n, c.look, "Researcher (playable)"]),
     ["SIR DURWIN", DURWIN, "Pattern Professor"],
-    ["JAMIE", RIVAL.look, "Rival"],
+    ["XANDER", RIVAL.look, "Rival"],
     ...PEOPLE.filter((p) => p.student).map((p) => [p.student.name, p.look, "Student"]),
-    ["LOLA", PEOPLE.find((p) => p.id === "lola").look, "Townsperson"],
-    ["BEEKEEPER", PEOPLE.find((p) => p.id === "beekeeper").look, "Townsperson"],
+    ["RIONA", PEOPLE.find((p) => p.id === "riona").look, "Student"],
+    ["ENNIO", PEOPLE.find((p) => p.id === "ennio").look, "Bio major, keeps the bees"],
   ];
   const left = 260;
   out.width = left + dirs.length * 3 * cell + 24; out.height = 110 + cast.length * (cell + 8);

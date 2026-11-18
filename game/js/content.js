@@ -33,7 +33,7 @@ export function playerLook() {
   return G.goldHat ? { ...c.look, hat: GOLD_HAT } : c.look;
 }
 export const RIVAL = {
-  label: "RIVAL JAMIE", look: { hat: "#5040a0", shirt: "#40a0a0", pants: "#283040" },
+  label: "RIVAL XANDER", look: { hat: "#5040a0", shirt: "#40a0a0", pants: "#283040" },
   intro: ["Hey! I've been collecting patterns too. Bet my notebook beats yours!",
           "Back again? I practiced my tiling all week. Let's go!",
           "Last time, for real. Fibonacci won't save you!"],
@@ -45,30 +45,30 @@ const student = (id, map, x, y, face, sight, level, step, name, lk, intro, lose)
 
 export const PEOPLE = [
   { id: "durwin", map: "lab", x: 8, y: 3, face: "down", look: DURWIN },
-  { id: "lola", map: "town", x: 3, y: 5, face: "right", look: look("#e8e8e8", "#a050a0", "#504060") },
-  { id: "beekeeper", map: "town", x: 10, y: 7, face: "left", look: look("#f0f0e0", "#f0b030", "#604020") },
+  { id: "riona", map: "town", x: 3, y: 5, face: "right", look: look("#e8e8e8", "#a050a0", "#504060") },
+  { id: "ennio", map: "town", x: 10, y: 7, face: "left", look: look("#f0f0e0", "#f0b030", "#604020") },
   { id: "rival", map: "town", x: 9, y: 4, face: "left", sight: 1, look: RIVAL.look },
-  student("mia", "garden", 6, 5, "right", 2, 0, 0, "MIA", look("#e8a030", "#e070a0", "#404858"),
-    "I'm counting rabbit pairs for my project. Help me guess month 6?", "One, one, two, three, five, eight. Got it!"),
-  student("leo", "garden", 10, 3, "down", 1, 0, 1, "LEO", look("#402818", "#50a070", "#303840"),
-    "Count the spirals on my flower. What comes next?", "Twenty-one, thirty-four, fifty-five. Nice!"),
-  student("ana", "hive", 6, 5, "right", 2, 1, 0, "ANA", look("#202020", "#f0d040", "#5a4630"),
-    "My floor has a gap in it. Which tile fixes it?", "No gaps, no overlaps. Nice!"),
-  student("raf", "hive", 10, 3, "down", 1, 1, 1, "RAF", look("#704020", "#d05030", "#303840"),
-    "The bees told me a secret about angles. Do you know it?", "Buzz! You cracked the honeycomb."),
-  student("joy", "field", 6, 5, "right", 2, 2, 0, "JOY", look("#f0d060", "#60a0e0", "#404858"),
-    "Let's divide some Fibonacci numbers. Ready?", "1.618... I'll never forget it now."),
-  student("kit", "field", 10, 3, "down", 1, 2, 1, "KIT", look("#303030", "#a060c0", "#5a4630"),
-    "I saw a video that says the golden ratio is the secret of beauty. True?", "Okay, I'll stop drawing rectangles on everything."),
+  student("callie", "garden", 6, 5, "right", 2, 0, 0, "CALLIE", look("#e8a030", "#e070a0", "#404858"),
+    "I'm modelling rabbit growth for my JGSOM case study. Help me forecast month 6?", "Eight pairs! My professor will love this projection."),
+  student("toby", "garden", 10, 3, "down", 1, 0, 1, "TOBY", look("#402818", "#50a070", "#303840"),
+    "I was supposed to be studying, but these flower spirals are more interesting. What comes next?", "Twenty-one, thirty-four, fifty-five. Nice!"),
+  student("chloe", "hive", 6, 5, "right", 2, 1, 0, "CHLOE", look("#202020", "#f0d040", "#5a4630"),
+    "Facilities asked me to retile Leong. Which tile leaves no gaps?", "No gaps, no overlaps. Nice!"),
+  student("ethan", "hive", 10, 3, "down", 1, 1, 1, "ETHAN", look("#704020", "#d05030", "#303840"),
+    "The bees here pay no rent, but they do know their angles. Do you?", "Buzz! You cracked the honeycomb."),
+  student("pau", "field", 6, 5, "right", 2, 2, 0, "PAU", look("#f0d060", "#60a0e0", "#404858"),
+    "Art majors love this number. Let's divide some Fibonacci numbers!", "1.618... I'm putting that in my next painting."),
+  student("zach", "field", 10, 3, "down", 1, 2, 1, "ZACH", look("#303030", "#a060c0", "#5a4630"),
+    "My org's pubs say the golden ratio is the secret of beauty. True?", "Okay, I'll stop drawing rectangles on everyone's faces."),
 ];
-const SPEAKERS = { "SIR DURWIN": DURWIN, LOLA: PEOPLE[1].look, BEEKEEPER: PEOPLE[2].look, TINDERA: look("#402818", "#e06080", "#304060"),
+const SPEAKERS = { "SIR DURWIN": DURWIN, RIONA: PEOPLE[1].look, ENNIO: PEOPLE[2].look, VENICE: look("#402818", "#e06080", "#304060"),
   [RIVAL.label]: RIVAL.look, ...Object.fromEntries(PEOPLE.filter((p) => p.student).map((p) => [`STUDENT ${p.student.name}`, p.look])) };
 export const speakerLook = (label) => (CHARS[label] ? CHARS[label].look : SPEAKERS[label]);
 
 // ---------- maps ----------
 // 15 × 10 tiles of 16 px = 240 × 160, the GBA screen size.
 // Outdoors: T tree · . grass · , tall grass (wild patterns) · = path · I sign · G V S Level entrances · L D lab and its door
-//           X sari-sari store · J jeepney · Q q a Level's big (blocking) and small (walkable) decorations · E exit
+//           X JSEC food stall · J Ikot jeep · Q q a Level's big (blocking) and small (walkable) decorations · E exit
 // Indoors:  W wall · K bookshelf · A window · O floor · B table · R rug · E exit mat
 const LEVEL_ROWS = [
   "TTTTTTTTTTTTTTT",
@@ -86,7 +86,7 @@ const levelMap = (name, level, townX, sign) => ({ name, level, pal: ["garden", "
   warps: { "8,9": { to: "town", x: townX, y: 2, dir: "down" } }, signs: { "9,8": sign } });
 export const MAPS = {
   town: {
-    name: "Barangay Maligaya", pal: "town",
+    name: "Ateneo de Manila", pal: "town",
     rows: [
       "TTTTTTTTTTTTTTT",
       "T..G....V....ST",
@@ -101,11 +101,11 @@ export const MAPS = {
     ],
     warps: { "3,1": { to: "garden", x: 8, y: 8, dir: "up", level: 0 }, "8,1": { to: "hive", x: 8, y: 8, dir: "up", level: 1 },
              "13,1": { to: "field", x: 8, y: 8, dir: "up", level: 2 }, "5,7": { to: "lab", x: 7, y: 7, dir: "up" } },
-    signs: { "7,4": "BARANGAY MALIGAYA. Field Station ↓ · Levels ↑ · Mabuhay!",
-             "9,2": "← THE GARDEN · THE BEEHIVE ↑ · THE SUNFLOWER FIELD →" },
+    signs: { "7,4": "ATENEO DE MANILA. Math Department ↓ · Levels ↑ · One Big Fight!",
+             "9,2": "← JGSOM GARDEN · LEONG HIVE ↑ · THE GOLDEN ARETE →" },
   },
   lab: {
-    name: "Field Station", pal: "lab",
+    name: "Math Department", pal: "lab",
     rows: [
       "WWWWWWWWWWWWWWW",
       "WKKKKAAAAAKKKKW",
@@ -121,9 +121,9 @@ export const MAPS = {
     warps: { "7,8": { to: "town", x: 5, y: 8, dir: "down" }, "8,8": { to: "town", x: 5, y: 8, dir: "down" } },
     signs: {},
   },
-  garden: levelMap("The Garden", 0, 3, "THE GARDEN. Count the rabbits, then count the petals."),
-  hive: levelMap("The Beehive", 1, 8, "THE BEEHIVE. Count the corners where the cells meet."),
-  field: levelMap("The Sunflower Field", 2, 13, "THE SUNFLOWER FIELD. Divide, then check the claim."),
+  garden: levelMap("JGSOM Garden", 0, 3, "JGSOM GARDEN. Even the rabbits here understand compound growth."),
+  hive: levelMap("Leong Hive", 1, 8, "LEONG HIVE. Formerly Leong Hall. The bees signed the lease first."),
+  field: levelMap("The Golden Arete", 2, 13, "THE GOLDEN ARETE. Home of the arts, and of people who draw golden rectangles on everything."),
 };
 export const HOME = { map: "lab", x: 8, y: 4, dir: "up" }; // right in front of Sir Durwin
 export const SIGN_COUNT = Object.values(MAPS).reduce((n, m) => n + Object.keys(m.signs).length, 0);
@@ -138,9 +138,9 @@ export const FACTS = [
 
 // ---------- dialogue ----------
 export const INTRO_LINES = [
-  "SIR DURWIN: Ah, you're here! Welcome to the Field Station of Barangay Maligaya.",
+  "SIR DURWIN: Ah, you're here! Welcome to the Math Department of the Ateneo.",
   "SIR DURWIN: I'm SIR DURWIN, but people call me the Pattern Professor.",
-  "SIR DURWIN: Something strange is happening. The barangay's patterns are getting scrambled!",
+  "SIR DURWIN: Something strange is happening. The campus's patterns are getting scrambled!",
   "SIR DURWIN: Rabbit counts that don't add up, floors full of gaps, golden rectangles drawn on everything...",
   "SIR DURWIN: Now, which of my three assistant Researchers is reporting for duty today?",
 ];
@@ -153,28 +153,28 @@ export const startLines = (name) => [
 ];
 export const TALK = {
   durwin: [
-    ["SIR DURWIN: Two students are waiting in the Garden, up the path to the west.", "SIR DURWIN: Win both pattern battles to earn the Fibonacci Badge!"],
-    ["SIR DURWIN: Splendid! The Garden's patterns are back. Two more students wait at the Beehive, straight north."],
-    ["SIR DURWIN: Two badges already! The last students are in the Sunflower Field to the north-east."],
+    ["SIR DURWIN: Two students are waiting in the JGSOM Garden, up the path to the west.", "SIR DURWIN: Win both pattern battles to earn the Fibonacci Badge!"],
+    ["SIR DURWIN: Splendid! The Garden's patterns are back. Two more students wait at Leong Hive, straight north."],
+    ["SIR DURWIN: Two badges already! The last students are at the Golden Arete to the north-east."],
   ],
-  lola: [
-    ["LOLA: Magandang araw, anak! My rabbits multiply so fast. Each month is the last two added together!"],
-    ["LOLA: The bees never leave gaps. Count the corners where their cells meet."],
-    ["LOLA: Some say the golden ratio is the secret of beauty. Hmp! Check the claim before you believe it."],
-    ["LOLA: Salamat, anak. The barangay's patterns look right again!"],
+  riona: [
+    ["RIONA: My blockmate's pet rabbits multiply so fast. Each month is the last two months added together!"],
+    ["RIONA: The bees at Leong never leave gaps. Count the corners where their cells meet."],
+    ["RIONA: Some say the golden ratio is the secret of beauty. Check the claim before you believe it."],
+    ["RIONA: The campus patterns look right again. Gonzaga run to celebrate?"],
   ],
-  beekeeper: [
-    ["BEEKEEPER: The Garden students are counting rabbits and petals."],
-    ["BEEKEEPER: My bees fit three cells around every corner. Neat, huh?"],
-    ["BEEKEEPER: Thanks for unscrambling the hive! The sunflower field is all about 1.618."],
-    ["BEEKEEPER: Thanks for unscrambling the hive!"],
+  ennio: [
+    ["ENNIO: The JGSOM Garden people are counting rabbits. Very on-brand: it's all about growth."],
+    ["ENNIO: I'm a Bio major. I look after the bees at Leong. They fit three cells around every corner!"],
+    ["ENNIO: Thanks for unscrambling the hive! Over at Arete, it's all about 1.618."],
+    ["ENNIO: Thanks for unscrambling the hive!"],
   ],
 };
 export const STORE_LINES = {
-  first: ["TINDERA: Magandang araw! Welcome to the sari-sari store.", "TINDERA: Here, take a HINT POTION. Libre na! (It's free!)"],
-  later: ["TINDERA: Ingat! Take care out there."],
+  first: ["VENICE: Welcome to JSEC! The lunch rush is over, so I'm feeling generous.", "VENICE: Here, take a HINT POTION. Libre na! (It's free!)"],
+  later: ["VENICE: Ingat! And don't skip lunch."],
 };
-export const JEEP_LINES = ["A jeepney is parked here. Its sign says MALIGAYA – BAYAN."];
+export const JEEP_LINES = ["The IKOT jeep is parked here. It goes around campus forever, like a loop with no end condition."];
 export const ENDING_LINES = ["Five plus three makes eight pairs. Well counted!", "Twenty-one plus thirty-four!", "No gaps, no overlaps.",
   "Three corners, 360 degrees.", "The golden ratio, about 1.618.", "And a claim checked, not just believed.", "And the big picture: patterns follow rules."];
 
@@ -194,7 +194,7 @@ export const ACHIEVEMENTS = {
   perfectSite: ["Perfect Level", "Get both Steps right on the first try at one Level."],
   reader: ["Bookworm", "Read every sign."],
   explorer: ["Explorer", "Find all four hidden notes."],
-  rival: ["Rival rumble", "Beat Jamie three times."],
+  rival: ["Rival rumble", "Beat Xander three times."],
   wild: ["Into the grass", "Win five wild battles."],
   speed: ["Quick thinker", "Score 8 or more in a speed battle."],
   unshaken: ["Unshaken", "Finish the game without blacking out."],

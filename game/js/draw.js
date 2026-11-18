@@ -183,7 +183,7 @@ export function drawLab(c, X, Y) { // 3 × 2 tiles with the door in the middle o
   px(c, OUTLINE, X + 18, Y + 19, 12, 13); px(c, "#6b4a2a", X + 19, Y + 20, 10, 12); px(c, "#8a6040", X + 19, Y + 20, 10, 1); px(c, "#f0c040", X + 26, Y + 26, 1, 1);
   px(c, OUTLINE, X + 15, Y + 13, 18, 7); px(c, "#2850a0", X + 16, Y + 14, 16, 5); word(c, "LAB", X + 19, Y + 14, "#ffffff");
 }
-export function drawStore(c, X, Y) { // the sari-sari store, 2 × 2 tiles, with snacks hanging in the window
+export function drawStore(c, X, Y) { // the JSEC food stall, 2 × 2 tiles, with snacks hanging in the window
   oval(c, X + 16, Y + 31, 17, 3, "rgba(0,0,0,.2)");
   px(c, OUTLINE, X, Y + 8, 32, 24); px(c, "#c89858", X + 1, Y + 9, 30, 22);
   for (let r = 0; r < 7; r++) px(c, "#b07e44", X + 1, Y + 11 + r * 3, 30, 1); // planks
@@ -195,7 +195,7 @@ export function drawStore(c, X, Y) { // the sari-sari store, 2 × 2 tiles, with 
   for (let i = 0; i < 9; i++) px(c, i % 2 ? "#f8f8f0" : "#e04848", X - 1 + i * 4, Y + 1, 4, 7); // striped awning
   for (let i = 0; i < 9; i++) px(c, i % 2 ? "#f8f8f0" : "#e04848", X - 1 + i * 4 + 1, Y + 8, 2, 2); // scalloped edge
 }
-export function drawJeep(c, X, Y) { // a jeepney, 2 × 1 tiles
+export function drawJeep(c, X, Y) { // the Ikot jeep, 2 × 1 tiles
   oval(c, X + 16, Y + 15, 15, 2, "rgba(0,0,0,.25)");
   px(c, OUTLINE, X, Y + 1, 32, 12);
   px(c, "#d8dce4", X + 1, Y + 2, 30, 10); px(c, "#f4f6f8", X + 1, Y + 2, 30, 1);
@@ -208,10 +208,10 @@ export function drawJeep(c, X, Y) { // a jeepney, 2 × 1 tiles
 
 // ---------- battle backgrounds ----------
 const SCENES = [
-  { sky: ["#8fd3f4", "#d8f2fb"], far: "#86c890", ground: "#a8d880", top: "#c4e8a0", rim: "#6aa848" }, // the Garden
-  { sky: ["#f6c870", "#fdf0c8"], far: "#e0b050", ground: "#e8cf78", top: "#f6e4a0", rim: "#b8902c" }, // the Beehive
-  { sky: ["#9ad8f0", "#eaf7fc"], far: "#9cc850", ground: "#cfe08a", top: "#e2f0a8", rim: "#94b040" }, // the Sunflower Field
-  { sky: ["#c8b898", "#e8e0d0"], far: "#8a7a68", ground: "#d8c8a8", top: "#e8dcc0", rim: "#b0a080" }, // the Field Station
+  { sky: ["#8fd3f4", "#d8f2fb"], far: "#86c890", ground: "#a8d880", top: "#c4e8a0", rim: "#6aa848" }, // JGSOM Garden
+  { sky: ["#f6c870", "#fdf0c8"], far: "#e0b050", ground: "#e8cf78", top: "#f6e4a0", rim: "#b8902c" }, // Leong Hive
+  { sky: ["#9ad8f0", "#eaf7fc"], far: "#9cc850", ground: "#cfe08a", top: "#e2f0a8", rim: "#94b040" }, // the Golden Arete
+  { sky: ["#c8b898", "#e8e0d0"], far: "#8a7a68", ground: "#d8c8a8", top: "#e8dcc0", rim: "#b0a080" }, // the Math Department
 ];
 export function drawBattleBg(c, w, h, level) {
   const s = SCENES[Math.min(level, 3)], horizon = h * 0.52, indoor = level >= 3;

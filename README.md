@@ -2,13 +2,13 @@
 
 A short single-player puzzle game about **mathematics as a science of patterns**, made for **MATH 10 Mathematics in the Modern World** (Section M2, 1st Semester SY 2026–2027).
 
-It plays like an old Game Boy Advance Pokémon game. The player is an assistant Researcher (Chippy, Bryce, or Joshua) sent by Sir Durwin, the Pattern Professor, to restore the scrambled patterns of Barangay Maligaya. Students at each Level challenge them to Battles, where the pattern is the opponent and the answers are the moves. After every win, an Explanation shows the reasoning, so the player learns the mathematics behind each pattern while playing. With all three Badges, the Researcher works out what the three patterns have in common.
+It plays like an old Game Boy Advance Pokémon game. The player is an assistant Researcher (Chippy, Bryce, or Joshua) sent by Sir Durwin, the Pattern Professor, to restore the scrambled patterns of the Ateneo campus. Students at each Level challenge them to Battles, where the pattern is the opponent and the answers are the moves. After every win, an Explanation shows the reasoning, so the player learns the mathematics behind each pattern while playing. With all three Badges, the Researcher works out what the three patterns have in common.
 
 | Level | Setting | Mathematics |
 | --- | --- | --- |
-| 1. The Garden | Fibonacci's rabbits and flower spirals | The Fibonacci sequence and where it shows up in nature |
-| 2. The Beehive | Honeycomb | Tessellations, and why hexagons fit (3 × 120° = 360°) |
-| 3. The Sunflower Field | The golden ratio | Fibonacci ratios approaching φ ≈ 1.618, and checking golden-ratio "beauty" claims |
+| 1. JGSOM Garden | Fibonacci's rabbits and flower spirals | The Fibonacci sequence and where it shows up in nature |
+| 2. Leong Hive | Honeycomb | Tessellations, and why hexagons fit (3 × 120° = 360°) |
+| 3. The Golden Arete | The golden ratio | Fibonacci ratios approaching φ ≈ 1.618, and checking golden-ratio "beauty" claims |
 
 The topics follow Module 1 (Mathematics in the World) of the course, and the Hints follow Polya's four steps from Module 3.
 
