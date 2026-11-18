@@ -1,9 +1,9 @@
-// Placeholder chiptune made in code: sound effects plus three looping songs. Adrian's real music and effects replace these later.
+// Sound effects are short chiptune blips made in code; the music is three looping MP3 files.
 import { settings } from "./state.js";
 
 let AC = null;
 export function audioOn() {
-  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); if (music.name && !music.timer) startMusic(); } catch {}
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume(); if (music.name && !music.src) startMusic(); } catch {}
 }
 function voice(freq, start, dur, type, vol, slideTo) {
   if (!AC || settings.muted || !settings.vol) return;
@@ -29,36 +29,29 @@ export const SFX = {
   badge: () => notes([523, 523, 523, 659, 0, 587, 659, 0, 784, 1047], 0.12, "triangle"),
 };
 
-// ---------- music: each song is a chord progression played as arpeggios over a bass line ----------
-const CHORDS = { C: [60, 4], Dm: [62, 3], Em: [64, 3], E: [64, 4], F: [65, 4], G: [67, 4], Am: [57, 3] }; // root (MIDI) and third
-function compose(bpm, progression, lead, bass) { // one bar per chord, eight eighth-notes per bar; odd bars play the arpeggio backwards
-  const steps = [];
-  progression.forEach((name, bar) => {
-    const [root, third] = CHORDS[name], tones = [0, third, 7, 12], pat = bar % 2 ? [...lead].reverse() : lead;
-    for (let i = 0; i < 8; i++) steps.push({ lead: pat[i] == null ? null : root + 12 + tones[pat[i]], bass: bass[i] == null ? null : root - 12 + (bass[i] ? 7 : 0) });
-  });
-  return { bpm, steps };
+// ---------- music: three looping MP3s in assets/audio (made with scripts/render-music.mjs) ----------
+const music = { name: null, src: null, gain: null, buffers: {} };
+const MUSIC_LEVEL = 0.14; // the files are normalised loud; this matches the sound effects
+async function loadSong(name) {
+  if (!music.buffers[name]) music.buffers[name] = fetch(`assets/audio/music-${name}.mp3`).then((r) => r.arrayBuffer()).then((b) => AC.decodeAudioData(b));
+  return music.buffers[name];
 }
-const SONGS = {
-  title: compose(92, ["F", "G", "Em", "Am", "F", "G", "C", "C"], [0, null, 1, 2, 3, 2, 1, null], [0, null, null, null, 1, null, null, null]),
-  town: compose(116, ["C", "G", "Am", "F", "C", "F", "G", "C"], [0, 2, 1, 2, 3, 2, 1, 2], [0, null, 1, null, 0, null, 1, null]),
-  battle: compose(152, ["Am", "Am", "F", "G", "Am", "Am", "Dm", "E"], [0, 0, 2, 0, 3, 0, 2, 1], [0, 0, 0, 0, 0, 0, 1, 1]),
-};
-const music = { name: null, step: 0, next: 0, timer: null };
-const midi = (n) => 440 * 2 ** ((n - 69) / 12);
 export function playMusic(name) {
   if (music.name === name) return;
-  Object.assign(music, { name, step: 0 }); clearInterval(music.timer); music.timer = null;
+  music.name = name;
+  if (music.src) { try { music.src.stop(); } catch {} music.src = null; }
   if (AC && name) startMusic();
 }
-function startMusic() { music.next = AC.currentTime + 0.1; music.timer = setInterval(schedule, 30); }
-function schedule() { // queue the notes due in the next 150 ms
-  const song = SONGS[music.name], dt = 60 / song.bpm / 2;
-  if (music.next < AC.currentTime - 0.05) music.next = AC.currentTime + 0.05; // the tab was asleep: skip ahead rather than burst
-  while (music.next < AC.currentTime + 0.15) {
-    const s = song.steps[music.step % song.steps.length];
-    if (s.lead) voice(midi(s.lead), music.next, dt * 0.85, "square", 0.028);
-    if (s.bass) voice(midi(s.bass), music.next, dt * 0.95, "triangle", 0.07);
-    music.next += dt; music.step++;
+async function startMusic() {
+  const name = music.name;
+  if (!music.gain) {
+    music.gain = AC.createGain(); music.gain.connect(AC.destination);
+    setInterval(() => { music.gain.gain.value = settings.muted ? 0 : settings.vol * MUSIC_LEVEL; }, 100); // follow the volume slider and mute button
   }
+  let buf;
+  try { buf = await loadSong(name); } catch { return; }
+  if (music.name !== name || music.src) return; // the song changed while it was loading
+  const src = AC.createBufferSource();
+  src.buffer = buf; src.loop = true; src.connect(music.gain); src.start();
+  music.src = src;
 }

@@ -6,9 +6,11 @@ It plays like an old Game Boy Advance Pokémon game. The player is an assistant 
 
 | Level | Setting | Mathematics |
 | --- | --- | --- |
-| 1. The Garden | Butterfly wings and snowflakes | Symmetry: reflection and rotation |
-| 2. The Beehive | Honeycomb | Tessellations |
-| 3. The Sunflower Field | Sunflowers, pinecones, and shells | Number patterns, the Fibonacci sequence, the golden ratio |
+| 1. The Garden | Fibonacci's rabbits and flower spirals | The Fibonacci sequence and where it shows up in nature |
+| 2. The Beehive | Honeycomb | Tessellations, and why hexagons fit (3 × 120° = 360°) |
+| 3. The Sunflower Field | The golden ratio | Fibonacci ratios approaching φ ≈ 1.618, and checking golden-ratio "beauty" claims |
+
+The topics follow Module 1 (Mathematics in the World) of the course, and the Hints follow Polya's four steps from Module 3.
 
 Plays in a desktop or phone browser from a link. Our estimate is 15–25 minutes; the game's Playtest data screen measures real times.
 
@@ -40,13 +42,16 @@ game/
   js/ui.js               dialogue box, menus, Notebook, settings, endings
   js/questions.js        practice questions generated from exact rules
   js/draw.js             pixel sprites, tiles, and the math Figures
-  js/state.js, audio.js  saving, achievements, stats; placeholder sounds
+  js/state.js, audio.js  saving, achievements, stats; sound effects and music playback
   data/level-N.json      the Steps of each Level (the only copy)
   data/conclusion.json   the final Conclusion Step
-  assets/                backgrounds, interface art, and audio
+  assets/audio/          the three music loops (MP3)
 .github/workflows/       the Step check, and publishing to GitHub Pages
+docs/art/                PNG exports of the maps and the character sprites
 scripts/
   check-puzzles.mjs      checks every Step is complete
+  render-music.mjs       renders the music to MP3 (needs lame)
+  export-art.sh          exports the map and character PNGs to docs/art (needs chromium)
 ```
 
 ## Running it locally

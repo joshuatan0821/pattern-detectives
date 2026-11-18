@@ -14,37 +14,6 @@ function make(base, correct, candidates) { // keep the first three Distractors t
   return { ...base, generated: true, options: [{ text: correct, correct: true }, ...wrong] };
 }
 
-function rotation() {
-  const n = pick([3, 4, 5, 6, 8, 9, 10, 12]), a = 360 / n;
-  return make({ foe: "SPIN FLAKE", topic: "Rotational symmetry", effect: "Rotation is super effective!",
-    question: `This flake has ${n} evenly spaced arms. What is the smallest turn that lands it on itself?`,
-    figure: { type: "snowflake", arms: n, missing: 0 },
-    hint: `Share a full turn, 360°, equally between the ${n} arms.`,
-    explanation: `${n} arms share a full turn, so 360° ÷ ${n} = ${deg(a)}.` },
-  deg(a), [
-    [deg(360 / (n - 1)), `That's 360° ÷ ${n - 1}. Count all ${n} arms.`],
-    [deg(360 / (n + 1)), `That's 360° ÷ ${n + 1}, one arm too many.`],
-    [deg(a / 2), "That's only half of the turn from one arm to the next."],
-    ["360°", "A full turn always works, but a smaller turn already lands it on itself."],
-    [deg(a * 2), "That skips an arm. The smallest turn moves each arm to the very next one."],
-  ]);
-}
-function mirrorLines() {
-  const n = pick([3, 4, 5, 6, 8]);
-  return make({ foe: "MIRROR GEM", topic: "Reflection symmetry", effect: "Reflection is super effective!",
-    question: `How many lines of symmetry does a regular ${POLY[n]} have?`, figure: { type: "polygon", sides: n },
-    hint: "A line of symmetry folds the shape exactly onto itself. Try one through each corner.",
-    explanation: `A regular polygon with ${n} sides has ${n} lines of symmetry. ` + (n % 2
-      ? "Each one goes through a corner and the middle of the opposite side."
-      : "Half go through opposite corners and half through the middles of opposite sides.") },
-  `${n}`, [
-    [`${2 * n}`, "That counts each line twice, once at each end."],
-    [`${n - 1}`, `One short. A regular ${POLY[n]} has one line for every side.`],
-    ["1", "A regular polygon folds onto itself in more than one way."],
-    [`${n + 1}`, `One too many. A regular ${POLY[n]} has exactly as many lines as sides.`],
-    ["0", "Every regular polygon has lines of symmetry."],
-  ]);
-}
 function cornerAngle() {
   const n = pick([3, 4, 5, 6, 8, 9, 10, 12]), a = corner(n);
   return make({ foe: "POLYGON", topic: "Interior angles", effect: "Angle math is super effective!",
@@ -101,7 +70,7 @@ function ratio() {
   ]);
 }
 
-const BY_LEVEL = [[rotation, mirrorLines], [cornerAngle, whichTiles], [nextTerm, ratio]];
+const BY_LEVEL = [[nextTerm], [cornerAngle, whichTiles], [ratio]]; // Fibonacci, hexagons and tilings, the golden ratio
 export function generate(level) {
   const pool = level >= 0 && level <= 2 ? BY_LEVEL[level] : BY_LEVEL.flat();
   return pick(pool)();

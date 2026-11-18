@@ -242,14 +242,14 @@ export function drawBattleBg(c, w, h, level) {
 export function drawBadge(c, i, on) {
   const col = on ? ["#3fa78a", "#e0a020", "#e06a30"][i] : "#9aa3ad", dark = on ? "#283040" : "#6b7480";
   c.save(); c.translate(32, 32); c.fillStyle = col; c.strokeStyle = dark; c.lineWidth = 3; c.beginPath();
-  if (i === 0) { c.moveTo(0, -26); c.lineTo(22, 0); c.lineTo(0, 26); c.lineTo(-22, 0); }
+  if (i === 0) c.arc(0, 0, 25, 0, 7);
   if (i === 1) for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3; c.lineTo(26 * Math.cos(a), 26 * Math.sin(a)); }
-  if (i === 2) c.arc(0, 0, 25, 0, 7);
+  if (i === 2) c.rect(-27, -17, 54, 34); // 54 ÷ 34 ≈ φ
   c.closePath(); c.fill(); c.stroke();
   c.beginPath(); c.lineWidth = 2;
-  if (i === 0) { c.moveTo(0, -20); c.lineTo(0, 20); }
+  if (i === 0) for (let t = 0; t < 12; t += 0.2) { const r = 1.6 * Math.exp(0.22 * t); c.lineTo(r * Math.cos(t), r * Math.sin(t)); }
   if (i === 1) for (let k = 0; k < 3; k++) { const a = Math.PI / 2 + k * 2 * Math.PI / 3; c.moveTo(0, 0); c.lineTo(15 * Math.cos(a), 15 * Math.sin(a)); }
-  if (i === 2) for (let t = 0; t < 12; t += 0.2) { const r = 1.6 * Math.exp(0.22 * t); c.lineTo(r * Math.cos(t), r * Math.sin(t)); }
+  if (i === 2) { c.moveTo(7, -17); c.lineTo(7, 17); c.moveTo(7, -4); c.lineTo(27, -4); } // cut off a square, then another
   c.stroke();
   if (on) { c.fillStyle = "rgba(255,255,255,.45)"; c.beginPath(); c.ellipse(-8, -10, 6, 3, -0.6, 0, 7); c.fill(); } // shine
   c.restore();
@@ -369,11 +369,46 @@ export const FIG = {
     if (f.hl) { ctx.strokeStyle = COL.hl; ctx.lineWidth = 3; ctx.strokeRect(w * 0.18, 4 * h / 4.6 - h / 6, w * 0.64, h / 4.6); }
   },
   trio(ctx, w, h) {
-    const parts = [["butterfly", { right: "mirror" }], ["honeycomb", {}], ["sunflower", {}]], cw = w / 3;
+    const parts = [["rabbits", { months: 4, small: true }], ["honeycomb", {}], ["sunflower", {}]], cw = w / 3;
     parts.forEach(([t, f], i) => {
       ctx.save(); ctx.translate(i * cw + 4, 4); ctx.beginPath(); ctx.rect(0, 0, cw - 8, h - 8); ctx.clip();
       FIG[t](ctx, cw - 8, h - 8, f); ctx.restore();
     });
+  },
+  rabbits(ctx, w, h, f) { // Fibonacci's rabbit puzzle: big = grown-up pair, small = young pair
+    const cols = f.months + (f.small ? 0 : 1), cw = w / cols, top = f.small ? 8 : 26, bottom = h - (f.small ? 8 : 22);
+    const size = Math.min(cw * 0.42, (bottom - top) / 6.2); // room for three rows of two
+    const bunny = (x, y, r, grown) => {
+      const col = grown ? "#8a6a52" : "#c8ad94";
+      ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x, y, r, r * 0.8, 0, 0, 7); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x - r * 0.35, y - r * 1.1, r * 0.22, r * 0.55, -0.15, 0, 7); ctx.ellipse(x + r * 0.35, y - r * 1.1, r * 0.22, r * 0.55, 0.15, 0, 7); ctx.fill();
+      ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(x + r * 0.35, y - r * 0.1, Math.max(1, r * 0.1), 0, 7); ctx.fill();
+    };
+    let grown = 0, young = 1;
+    for (let m = 1; m <= cols; m++) {
+      const cx = (m - 0.5) * cw;
+      if (!f.small) { ctx.textAlign = "center"; label(ctx, `month ${m}`, cx, h - 5, Math.round(h / 15), COL.ink); }
+      if (m > f.months) { label(ctx, "?", cx, (top + bottom) / 2 + size, size * 2.4, COL.hl); break; }
+      const all = [...Array(grown).fill(true), ...Array(young).fill(false)];
+      all.forEach((g, k) => bunny(cx - size * 0.5 + (k % 2) * size * 1.05, bottom - size * 0.8 - Math.floor(k / 2) * size * 1.9, (g ? 0.5 : 0.36) * size * 1.15, g));
+      if (!f.small) { ctx.textAlign = "center"; label(ctx, `${grown + young}`, cx, top - 4, Math.round(h / 10), COL.ink); }
+      [grown, young] = [grown + young, grown]; // young pairs grow up; every grown-up pair has a young pair
+    }
+    if (f.hl) { ctx.textAlign = "left"; label(ctx, "dark & big = grown up · light & small = young", 6, top + 14, Math.round(h / 15)); }
+  },
+  goldenRect(ctx, w, h, f) { // cut a square off a golden rectangle and a smaller golden rectangle is left; repeat
+    const phi = (1 + Math.sqrt(5)) / 2, H = Math.min(h - 24, (w - 20) / phi);
+    let x = (w - H * phi) / 2, y = (h - 16 - H) / 2, rw = H * phi, rh = H;
+    ctx.lineWidth = 2; ctx.strokeStyle = COL.ink;
+    for (let k = 0; k < 8; k++) { // squares go on the left, top, right, bottom in turn, spiralling inward
+      const dir = k % 4, s = Math.min(rw, rh);
+      const [qx, qy] = [[x, y], [x, y], [x + rw - s, y], [x, y + rh - s]][dir];
+      ctx.fillStyle = k % 2 ? COL.gold : COL.wax; ctx.fillRect(qx, qy, s, s); ctx.strokeRect(qx, qy, s, s);
+      const [cx, cy, a0] = [[qx + s, qy + s, 1], [qx, qy + s, 1.5], [qx, qy, 0], [qx + s, qy, 0.5]][dir];
+      ctx.save(); ctx.strokeStyle = COL.hl; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(cx, cy, s, a0 * Math.PI, (a0 + 0.5) * Math.PI); ctx.stroke(); ctx.restore();
+      if (dir === 0) { x += s; rw -= s; } else if (dir === 1) { y += s; rh -= s; } else if (dir === 2) rw -= s; else rh -= s;
+    }
+    ctx.textAlign = "center"; label(ctx, f.hl ? "long side ÷ short side = φ in every rectangle" : "long side ÷ short side ≈ 1.618", w / 2, h - 4, Math.round(h / 12), COL.ink);
   },
   polygon(ctx, w, h, f) {
     const n = f.sides, R = Math.min(w, h) * 0.38;
@@ -420,7 +455,9 @@ export function describe(f) {
     case "honeycomb": return "Honeycomb with a marked point where three cells meet";
     case "sunflower": return "Sunflower head with seeds arranged in spirals";
     case "ratios": return "The ratios 8 ÷ 5, 13 ÷ 8, 21 ÷ 13, and 34 ÷ 21";
-    case "trio": return "A butterfly, a honeycomb, and a sunflower";
+    case "trio": return "Rabbit pairs, a honeycomb, and a sunflower";
+    case "rabbits": return `Rabbit pairs counted month by month for ${f.months} months, then a question mark`;
+    case "goldenRect": return "A golden rectangle split into a square and a smaller golden rectangle, again and again, with a spiral";
     case "polygon": return `A regular ${POLY[f.sides]}`;
     case "sequence": return `The numbers ${f.terms.join(", ")}, then a blank`;
     case "fraction": return `${f.b} divided by ${f.a}`;

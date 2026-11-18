@@ -1,7 +1,7 @@
 {
   "level": 2,
   "name": "The Beehive",
-  "setting": "Honeycomb",
+  "setting": "Honeycomb and tessellations",
   "steps": [
     {
       "id": "l2s1",
@@ -9,12 +9,43 @@
       "foe": "FLOOR GAP",
       "effect": "Tiling is super effective!",
       "question": "Copies of each tile are placed around one corner. Which regular polygon fills the space with no gap?",
-      "figure": { "type": "tiles", "sides": 5 },
+      "figure": {
+        "type": "tiles",
+        "sides": 5
+      },
       "options": [
-        { "text": "Hexagon", "figure": { "type": "tiles", "sides": 6 }, "correct": true },
-        { "text": "Pentagon", "figure": { "type": "tiles", "sides": 5 }, "whyWrong": "Each pentagon corner is 108°. Three make 324°, leaving a 36° gap." },
-        { "text": "Octagon", "figure": { "type": "tiles", "sides": 8 }, "whyWrong": "Each octagon corner is 135°. Two make 270°, leaving a 90° gap." },
-        { "text": "Heptagon", "figure": { "type": "tiles", "sides": 7 }, "whyWrong": "Each heptagon corner is about 128.6°. Two leave a gap and three overlap." }
+        {
+          "text": "Hexagon",
+          "figure": {
+            "type": "tiles",
+            "sides": 6
+          },
+          "correct": true
+        },
+        {
+          "text": "Pentagon",
+          "figure": {
+            "type": "tiles",
+            "sides": 5
+          },
+          "whyWrong": "Each pentagon corner is 108°. Three make 324°, leaving a 36° gap."
+        },
+        {
+          "text": "Octagon",
+          "figure": {
+            "type": "tiles",
+            "sides": 8
+          },
+          "whyWrong": "Each octagon corner is 135°. Two make 270°, leaving a 90° gap."
+        },
+        {
+          "text": "Heptagon",
+          "figure": {
+            "type": "tiles",
+            "sides": 7
+          },
+          "whyWrong": "Each heptagon corner is about 128.6°. Two leave a gap and three overlap."
+        }
       ],
       "hint": "Tiles meeting at a point must add up to exactly 360°.",
       "polya": {
@@ -26,9 +57,18 @@
       "why": "Floor tiles, paving stones, and woven mats all depend on shapes that fit together with no gaps.",
       "cite": "Bataller et al. (2019)",
       "extras": [
-        { "sides": 3, "label": "Triangles: 6 × 60° = 360°" },
-        { "sides": 4, "label": "Squares: 4 × 90° = 360°" },
-        { "sides": 6, "label": "Hexagons: 3 × 120° = 360°" }
+        {
+          "sides": 3,
+          "label": "Triangles: 6 × 60° = 360°"
+        },
+        {
+          "sides": 4,
+          "label": "Squares: 4 × 90° = 360°"
+        },
+        {
+          "sides": 6,
+          "label": "Hexagons: 3 × 120° = 360°"
+        }
       ],
       "tryIt": "tiles"
     },
@@ -38,12 +78,26 @@
       "foe": "HONEYCOMB",
       "effect": "Angle math is super effective!",
       "question": "Why do hexagons fit together with no gaps?",
-      "figure": { "type": "honeycomb" },
+      "figure": {
+        "type": "honeycomb"
+      },
       "options": [
-        { "text": "Three 120° corners make exactly 360°", "correct": true },
-        { "text": "Six sides × 60° = 360°", "whyWrong": "A hexagon's corner is 120°, not 60°. And it's the corners meeting at a point that matter, not the number of sides." },
-        { "text": "Any shape with an even number of sides fits", "whyWrong": "Counterexample: the octagon has 8 sides but leaves gaps." },
-        { "text": "Bees bend the walls until they fit", "whyWrong": "Flat regular hexagons tile perfectly with no bending. The angles alone explain it." }
+        {
+          "text": "Three 120° corners make exactly 360°",
+          "correct": true
+        },
+        {
+          "text": "Six sides × 60° = 360°",
+          "whyWrong": "A hexagon's corner is 120°, not 60°. And it's the corners meeting at a point that matter, not the number of sides."
+        },
+        {
+          "text": "Any shape with an even number of sides fits",
+          "whyWrong": "Counterexample: the octagon has 8 sides but leaves gaps."
+        },
+        {
+          "text": "Bees bend the walls until they fit",
+          "whyWrong": "Flat regular hexagons tile perfectly with no bending. The angles alone explain it."
+        }
       ],
       "hint": "Look at the marked point where three cells meet. What is each corner's angle?",
       "polya": {
@@ -51,7 +105,7 @@
         "plan": "Each corner of a regular hexagon is 120°. Multiply by the number of corners at the point.",
         "lookBack": "The angles around any point add up to 360°, so 3 × 120° fits perfectly."
       },
-      "explanation": "Each corner of a regular hexagon is 120°, and three meet at every point: 3 × 120° = 360°. Hexagons also use the least wall to divide a surface into equal cells (Hales' honeycomb conjecture, proved in 2001), which saves the bees wax.",
+      "explanation": "Each corner of a regular hexagon is 120°, and three meet at every point: 3 × 120° = 360°. Hexagons also use the least wall to divide a surface into equal cells (Hales' honeycomb conjecture, proved in 2001), which saves the bees wax. The same six-sided cells show up in a dragonfly's eyes.",
       "why": "Hexagon cells use the least wax for the space they hold, which saves the bees food.",
       "cite": "Hales (2001)"
     }

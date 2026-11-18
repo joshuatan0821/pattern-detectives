@@ -1,57 +1,83 @@
 {
   "level": 1,
   "name": "The Garden",
-  "setting": "Butterfly wings and snowflakes",
+  "setting": "Fibonacci's rabbits and flower spirals",
   "steps": [
     {
       "id": "l1s1",
-      "topic": "Reflection symmetry",
-      "foe": "BUTTERFLY",
-      "effect": "Reflection is super effective!",
-      "question": "Half of this butterfly is missing. Which picture completes it?",
-      "figure": { "type": "butterfly", "right": "missing" },
-      "options": [
-        { "text": "A", "figure": { "type": "butterfly", "right": "mirror" }, "correct": true },
-        { "text": "B", "figure": { "type": "butterfly", "right": "copy" }, "whyWrong": "B slides the same wing over without flipping it. That's a translation, not a reflection." },
-        { "text": "C", "figure": { "type": "butterfly", "right": "rotate" }, "whyWrong": "C turns the wing upside down (a 180° rotation). A mirror flips left and right only." },
-        { "text": "D", "figure": { "type": "butterfly", "right": "spots" }, "whyWrong": "D has the right shape, but its spots don't match the other side." }
-      ],
-      "hint": "Imagine folding the page along the body. Both halves should land on each other exactly.",
-      "polya": {
-        "understand": "The missing half must match the half you can see, as if the page were folded along the body.",
-        "plan": "Picture each option folded onto the left wing. Which one lands exactly, spots and all?",
-        "lookBack": "Check one spot: the big dark spot must be the same distance from the body on both sides."
+      "topic": "The Fibonacci sequence",
+      "foe": "RABBIT PAIRS",
+      "effect": "Fibonacci is super effective!",
+      "question": "A young pair of rabbits grows up in one month. Every grown-up pair then has one young pair each month. How many pairs are there in month 6?",
+      "figure": {
+        "type": "rabbits",
+        "months": 5
       },
-      "explanation": "A butterfly has reflection symmetry: the body is a line of symmetry, and each wing is the mirror image of the other. Every point on the left has a matching point the same distance away on the right.",
-      "why": "Left–right symmetry is common in animals that move in one direction, like butterflies, fish, and people.",
-      "cite": "Stewart (2017)",
-      "anim": "reflect",
-      "tryIt": "reflect"
+      "options": [
+        {
+          "text": "8",
+          "correct": true
+        },
+        {
+          "text": "7",
+          "whyWrong": "7 repeats the last jump of 2 (from 3 to 5). The jumps grow each month, because more pairs grow up."
+        },
+        {
+          "text": "10",
+          "whyWrong": "10 doubles month 5. Only the grown-up pairs have babies, and the 2 young pairs born in month 5 aren't grown up yet."
+        },
+        {
+          "text": "6",
+          "whyWrong": "6 adds one pair a month. But every grown-up pair has a baby pair, so more than one pair is born."
+        }
+      ],
+      "hint": "Month 6 keeps all 5 pairs from month 5, plus one baby pair for each pair that was grown up in month 5.",
+      "polya": {
+        "understand": "Big pairs are grown up; small pairs are young. Young pairs grow up after one month, and only grown-up pairs have babies.",
+        "plan": "Keep month 5's 5 pairs. Then add one new pair for each big (grown-up) pair in month 5.",
+        "lookBack": "5 + 3 = 8. Each month is the sum of the two months before it: 1, 1, 2, 3, 5, 8."
+      },
+      "explanation": "Month 6 has month 5's 5 pairs plus 3 new young pairs (one for each pair that was already alive in month 4): 5 + 3 = 8. The counts 1, 1, 2, 3, 5, 8, … are the Fibonacci sequence, where each number is the sum of the two before it. Leonardo of Pisa, called Fibonacci, used this rabbit puzzle to introduce the sequence.",
+      "why": "Real rabbits don't breed this neatly. The rules are a thought experiment, but the same numbers really do show up in petals and seed spirals.",
+      "cite": "Bataller et al. (2019)"
     },
     {
       "id": "l1s2",
-      "topic": "Rotational symmetry",
-      "foe": "SNOWFLAKE",
-      "effect": "Rotation is super effective!",
-      "question": "This snowflake lost an arm. The arms are spaced evenly. How many degrees apart are they?",
-      "figure": { "type": "snowflake", "arms": 6, "missing": 1 },
-      "options": [
-        { "text": "60°", "correct": true },
-        { "text": "72°", "whyWrong": "72° = 360° ÷ 5. That counts only the five arms you can see, not the missing one." },
-        { "text": "90°", "whyWrong": "90° = 360° ÷ 4 would give a snowflake with four arms." },
-        { "text": "45°", "whyWrong": "45° = 360° ÷ 8 would give eight arms." }
-      ],
-      "hint": "A full turn is 360°. How many arms would a complete snowflake have?",
-      "polya": {
-        "understand": "The arms are evenly spaced around one full turn of 360°.",
-        "plan": "Count the arms a complete snowflake would have, including the missing one, then share 360° between them.",
-        "lookBack": "6 × 60° = 360°, so six turns of 60° bring the snowflake all the way around."
+      "topic": "Fibonacci spirals in flowers",
+      "foe": "SUNFLOWER",
+      "effect": "Fibonacci is super effective!",
+      "question": "This flower head has 21 spirals one way and 34 the other. How many spirals would the next size up have?",
+      "figure": {
+        "type": "sunflower"
       },
-      "explanation": "A complete snowflake has 6 arms, so the arms are 360° ÷ 6 = 60° apart. Turning it by 60° lands it on itself: six-fold rotational symmetry. Ice crystals grow this way because water molecules lock into a hexagonal pattern.",
-      "why": "Snowflakes get their six-fold shape from the hexagonal way water molecules freeze.",
-      "cite": "Stewart (2017)",
-      "anim": "rotate",
-      "tryIt": "rotate"
+      "options": [
+        {
+          "text": "55",
+          "correct": true
+        },
+        {
+          "text": "68",
+          "whyWrong": "68 doubles 34. The pattern adds the two numbers before instead."
+        },
+        {
+          "text": "47",
+          "whyWrong": "47 adds 13 to 34, as if the jump from 21 to 34 repeats. The jumps grow each time."
+        },
+        {
+          "text": "35",
+          "whyWrong": "35 counts up by one. The spiral counts grow much faster."
+        }
+      ],
+      "hint": "Look at how each number in 1, 1, 2, 3, 5, 8, 13, 21, 34 relates to the two before it.",
+      "polya": {
+        "understand": "21 and 34 are neighbours in a famous sequence: 1, 1, 2, 3, 5, 8, 13, 21, 34, …",
+        "plan": "Find the rule that makes each number from the two before it, then apply it to 21 and 34.",
+        "lookBack": "13 + 21 = 34 and 21 + 34 = 55. The same rule works every time."
+      },
+      "explanation": "Each Fibonacci number is the sum of the two before it, so 21 + 34 = 55. Sunflower spirals almost always come in neighbouring Fibonacci numbers, as do pinecones and pineapples.",
+      "why": "Placing each seed at the golden angle packs the seeds tightly with no wasted space, and that is what makes the Fibonacci spirals appear.",
+      "cite": "Knott (n.d.)",
+      "tryIt": "spirals"
     }
   ]
 }

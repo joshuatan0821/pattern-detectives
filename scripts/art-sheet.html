@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- Draws the game's maps and characters, using the game's own drawing code, so they can be saved as PNGs.
+     scripts/export-art.sh opens this page in headless Chromium once per sheet: ?sheet=characters or ?sheet=map&map=town -->
+<html><head><meta charset="utf-8"><title>Art sheet</title>
+<style>html,body{margin:0;background:#f4efe2;font:16px/1.3 monospace;color:#1c2230}canvas{display:block}</style></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+import { TILE, drawTile, drawPerson, drawShadow, drawLab, drawStore, drawJeep } from "../game/js/draw.js";
+import { MAPS, PEOPLE, CHARS, DURWIN, RIVAL } from "../game/js/content.js";
+
+const q = new URLSearchParams(location.search), out = document.getElementById("c"), o = out.getContext("2d");
+const blit = (src, x, y, scale) => { o.imageSmoothingEnabled = false; o.drawImage(src, x, y, src.width * scale, src.height * scale); };
+const label = (t, x, y, size = 16, bold = false) => { o.fillStyle = "#1c2230"; o.font = `${bold ? "bold " : ""}${size}px monospace`; o.fillText(t, x, y); };
+const sprite = (look, frame, dir) => { const c = document.createElement("canvas"); c.width = c.height = 16; drawPerson(c.getContext("2d"), 0, 0, look, frame, dir); return c; };
+
+if (q.get("sheet") === "map") {
+  const id = q.get("map"), m = MAPS[id], S = 4, c = document.createElement("canvas");
+  c.width = 240; c.height = 160;
+  const ctx = c.getContext("2d");
+  m.rows.forEach((row, y) => [...row].forEach((t, x) => drawTile(ctx, t, x * TILE, y * TILE, m.pal, x, y, (dx, dy) => m.rows[y + dy]?.[x + dx] ?? "T", 0)));
+  if (id === "town") { drawLab(ctx, 4 * TILE, 6 * TILE); drawStore(ctx, 1 * TILE, 6 * TILE); drawJeep(ctx, 11 * TILE, 5 * TILE); }
+  for (const p of PEOPLE.filter((p) => p.map === id)) { drawShadow(ctx, p.x * TILE, p.y * TILE); drawPerson(ctx, p.x * TILE, p.y * TILE, p.look, 0, p.face); }
+  out.width = 240 * S + 48; out.height = 160 * S + 96;
+  o.fillStyle = "#f4efe2"; o.fillRect(0, 0, out.width, out.height);
+  label(`${m.name}  (map "${id}", 15 × 10 tiles of 16 px)`, 24, 40, 22, true);
+  blit(c, 24, 64, S);
+  // a faint tile grid, so the 16 px tiles are easy to see
+  o.strokeStyle = "rgba(28,34,48,.12)";
+  for (let x = 0; x <= 15; x++) { o.beginPath(); o.moveTo(24 + x * 64 + .5, 64); o.lineTo(24 + x * 64 + .5, 64 + 640); o.stroke(); }
+  for (let y = 0; y <= 10; y++) { o.beginPath(); o.moveTo(24, 64 + y * 64 + .5); o.lineTo(24 + 960, 64 + y * 64 + .5); o.stroke(); }
+} else {
+  const S = 6, cell = 16 * S + 16, dirs = ["down", "left", "right", "up"];
+  const cast = [
+    ...Object.entries(CHARS).map(([n, c]) => [n, c.look, "Researcher (playable)"]),
+    ["SIR DURWIN", DURWIN, "Pattern Professor"],
+    ["JAMIE", RIVAL.look, "Rival"],
+    ...PEOPLE.filter((p) => p.student).map((p) => [p.student.name, p.look, "Student"]),
+    ["LOLA", PEOPLE.find((p) => p.id === "lola").look, "Townsperson"],
+    ["BEEKEEPER", PEOPLE.find((p) => p.id === "beekeeper").look, "Townsperson"],
+  ];
+  const left = 260;
+  out.width = left + dirs.length * 3 * cell + 24; out.height = 110 + cast.length * (cell + 8);
+  o.fillStyle = "#f4efe2"; o.fillRect(0, 0, out.width, out.height);
+  label("Pattern Detectives: characters (16 × 16 px sprites, shown 6×)", 24, 40, 22, true);
+  dirs.forEach((d, i) => label(`${d}: stand · step · step`, left + i * 3 * cell, 84, 14));
+  cast.forEach(([name, look, role], r) => {
+    const y = 100 + r * (cell + 8);
+    label(name, 24, y + 44, 18, true); label(role, 24, y + 66, 14);
+    dirs.forEach((d, i) => [0, 1, 2].forEach((f) => blit(sprite(look, f, d), left + (i * 3 + f) * cell, y, S)));
+  });
+}
+document.title = "ready";
+</script></body></html>

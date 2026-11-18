@@ -14,7 +14,7 @@ export async function loadLevels() {
 }
 export const totalSteps = () => LEVELS.reduce((n, l) => n + l.steps.length, 0);
 export const stepKey = (level, step) => `${level}-${step}`;
-export const BADGES = ["Symmetry Badge", "Tiling Badge", "Fibonacci Badge"];
+export const BADGES = ["Fibonacci Badge", "Hexagon Badge", "Golden Ratio Badge"];
 
 // ---------- people ----------
 export const DURWIN = { hat: "#b8b8c0", shirt: "#f8f8f8", pants: "#404858", glasses: true, coat: true };
@@ -49,17 +49,17 @@ export const PEOPLE = [
   { id: "beekeeper", map: "town", x: 10, y: 7, face: "left", look: look("#f0f0e0", "#f0b030", "#604020") },
   { id: "rival", map: "town", x: 9, y: 4, face: "left", sight: 1, look: RIVAL.look },
   student("mia", "garden", 6, 5, "right", 2, 0, 0, "MIA", look("#e8a030", "#e070a0", "#404858"),
-    "Butterflies are my favorite! Can you finish this one?", "Wow, you really know your mirrors!"),
+    "I'm counting rabbit pairs for my project. Help me guess month 6?", "One, one, two, three, five, eight. Got it!"),
   student("leo", "garden", 10, 3, "down", 1, 0, 1, "LEO", look("#402818", "#50a070", "#303840"),
-    "It's chilly in the shade. Count my snowflake's arms!", "Brr! You spun that one right round."),
+    "Count the spirals on my flower. What comes next?", "Twenty-one, thirty-four, fifty-five. Nice!"),
   student("ana", "hive", 6, 5, "right", 2, 1, 0, "ANA", look("#202020", "#f0d040", "#5a4630"),
     "My floor has a gap in it. Which tile fixes it?", "No gaps, no overlaps. Nice!"),
   student("raf", "hive", 10, 3, "down", 1, 1, 1, "RAF", look("#704020", "#d05030", "#303840"),
     "The bees told me a secret about angles. Do you know it?", "Buzz! You cracked the honeycomb."),
   student("joy", "field", 6, 5, "right", 2, 2, 0, "JOY", look("#f0d060", "#60a0e0", "#404858"),
-    "I counted every spiral on this sunflower. Can you keep going?", "You're a natural at Fibonacci!"),
-  student("kit", "field", 10, 3, "down", 1, 2, 1, "KIT", look("#303030", "#a060c0", "#5a4630"),
     "Let's divide some Fibonacci numbers. Ready?", "1.618... I'll never forget it now."),
+  student("kit", "field", 10, 3, "down", 1, 2, 1, "KIT", look("#303030", "#a060c0", "#5a4630"),
+    "I saw a video that says the golden ratio is the secret of beauty. True?", "Okay, I'll stop drawing rectangles on everything."),
 ];
 const SPEAKERS = { "SIR DURWIN": DURWIN, LOLA: PEOPLE[1].look, BEEKEEPER: PEOPLE[2].look, TINDERA: look("#402818", "#e06080", "#304060"),
   [RIVAL.label]: RIVAL.look, ...Object.fromEntries(PEOPLE.filter((p) => p.student).map((p) => [`STUDENT ${p.student.name}`, p.look])) };
@@ -121,17 +121,17 @@ export const MAPS = {
     warps: { "7,8": { to: "town", x: 5, y: 8, dir: "down" }, "8,8": { to: "town", x: 5, y: 8, dir: "down" } },
     signs: {},
   },
-  garden: levelMap("The Garden", 0, 3, "THE GARDEN. Half a pattern tells you the other half."),
+  garden: levelMap("The Garden", 0, 3, "THE GARDEN. Count the rabbits, then count the petals."),
   hive: levelMap("The Beehive", 1, 8, "THE BEEHIVE. Count the corners where the cells meet."),
-  field: levelMap("The Sunflower Field", 2, 13, "THE SUNFLOWER FIELD. Count the spirals, then keep counting."),
+  field: levelMap("The Sunflower Field", 2, 13, "THE SUNFLOWER FIELD. Divide, then check the claim."),
 };
 export const HOME = { map: "lab", x: 8, y: 4, dir: "up" }; // right in front of Sir Durwin
 export const SIGN_COUNT = Object.values(MAPS).reduce((n, m) => n + Object.keys(m.signs).length, 0);
 
 // ---------- hidden notes (each comes with a Hint Potion) ----------
 export const FACTS = [
-  { id: "banig", map: "town", x: 12, y: 8, text: "Woven mats like the banig repeat one motif by reflecting, turning, or sliding it." },
-  { id: "bilateral", map: "garden", x: 7, y: 1, text: "Most animals, people included, have left–right symmetry." },
+  { id: "galileo", map: "town", x: 12, y: 8, text: "Galileo wrote that the book of nature is written in the language of mathematics." },
+  { id: "petals", map: "garden", x: 7, y: 1, text: "Lilies have 3 petals, buttercups 5, and many daisies 21 or 34. Not every flower, but a lot of them land on Fibonacci numbers." },
   { id: "wax", map: "hive", x: 7, y: 1, text: "Bees use honey to make wax, so building with less wall saves them food." },
   { id: "pinecone", map: "field", x: 7, y: 1, text: "Pinecones and pineapples show spiral counts like 8 and 13: neighbouring Fibonacci numbers." },
 ];
@@ -141,7 +141,7 @@ export const INTRO_LINES = [
   "SIR DURWIN: Ah, you're here! Welcome to the Field Station of Barangay Maligaya.",
   "SIR DURWIN: I'm SIR DURWIN, but people call me the Pattern Professor.",
   "SIR DURWIN: Something strange is happening. The barangay's patterns are getting scrambled!",
-  "SIR DURWIN: Lopsided butterflies, floors full of gaps, sunflowers that lost count...",
+  "SIR DURWIN: Rabbit counts that don't add up, floors full of gaps, golden rectangles drawn on everything...",
   "SIR DURWIN: Now, which of my three assistant Researchers is reporting for duty today?",
 ];
 export const startLines = (name) => [
@@ -153,20 +153,20 @@ export const startLines = (name) => [
 ];
 export const TALK = {
   durwin: [
-    ["SIR DURWIN: Two students are waiting in the Garden, up the path to the west.", "SIR DURWIN: Win both pattern battles to earn the Symmetry Badge!"],
+    ["SIR DURWIN: Two students are waiting in the Garden, up the path to the west.", "SIR DURWIN: Win both pattern battles to earn the Fibonacci Badge!"],
     ["SIR DURWIN: Splendid! The Garden's patterns are back. Two more students wait at the Beehive, straight north."],
     ["SIR DURWIN: Two badges already! The last students are in the Sunflower Field to the north-east."],
   ],
   lola: [
-    ["LOLA: Magandang araw, anak! When I fold my banig in half, both sides match. Remember that in the Garden."],
+    ["LOLA: Magandang araw, anak! My rabbits multiply so fast. Each month is the last two added together!"],
     ["LOLA: The bees never leave gaps. Count the corners where their cells meet."],
-    ["LOLA: My sunflowers? Each count is the two before it, added together."],
+    ["LOLA: Some say the golden ratio is the secret of beauty. Hmp! Check the claim before you believe it."],
     ["LOLA: Salamat, anak. The barangay's patterns look right again!"],
   ],
   beekeeper: [
-    ["BEEKEEPER: The Garden students love mirrors and snowflakes."],
+    ["BEEKEEPER: The Garden students are counting rabbits and petals."],
     ["BEEKEEPER: My bees fit three cells around every corner. Neat, huh?"],
-    ["BEEKEEPER: Thanks for unscrambling the hive! Good luck in the sunflowers."],
+    ["BEEKEEPER: Thanks for unscrambling the hive! The sunflower field is all about 1.618."],
     ["BEEKEEPER: Thanks for unscrambling the hive!"],
   ],
 };
@@ -175,18 +175,18 @@ export const STORE_LINES = {
   later: ["TINDERA: Ingat! Take care out there."],
 };
 export const JEEP_LINES = ["A jeepney is parked here. Its sign says MALIGAYA – BAYAN."];
-export const ENDING_LINES = ["A perfect mirror. Well spotted!", "Six arms, sixty degrees apart. Splendid.", "No gaps, no overlaps.",
-  "Three corners, 360 degrees.", "Twenty-one plus thirty-four!", "The golden ratio, about 1.618.", "And the big picture: patterns follow rules."];
+export const ENDING_LINES = ["Five plus three makes eight pairs. Well counted!", "Twenty-one plus thirty-four!", "No gaps, no overlaps.",
+  "Three corners, 360 degrees.", "The golden ratio, about 1.618.", "And a claim checked, not just believed.", "And the big picture: patterns follow rules."];
 
 // ---------- reference ----------
 export const GLOSSARY = [
-  ["Reflection symmetry", "A shape has reflection symmetry if flipping it across a line (the line of symmetry) gives back the same shape."],
-  ["Rotational symmetry", "A shape has rotational symmetry if turning it by less than a full turn about its center gives back the same shape. A six-armed snowflake matches itself every 360° ÷ 6 = 60°."],
   ["Regular polygon", "A polygon whose sides are all equal and whose angles are all equal."],
   ["Interior angle", "The angle inside a polygon at one corner. In a regular polygon with n sides, each one is (n − 2) × 180° ÷ n."],
   ["Tessellation", "A covering of a flat surface by shapes, with no gaps and no overlaps."],
   ["Fibonacci sequence", "1, 1, 2, 3, 5, 8, 13, … Each number after the first two is the sum of the two before it."],
   ["Golden ratio (φ)", "φ = (1 + √5) ÷ 2 ≈ 1.618. Ratios of neighbouring Fibonacci numbers get closer and closer to it."],
+  ["Golden rectangle", "A rectangle whose long side ÷ short side is φ. Cut a square off it and a smaller golden rectangle is left."],
+  ["Golden angle", "About 137.5°. A sunflower turns by this angle between one seed and the next, which makes Fibonacci numbers of spirals."],
   ["Polya's four steps", "Understand the problem, devise a plan, carry out the plan, and look back. The Hints follow these steps."],
 ];
 export const ACHIEVEMENTS = {
