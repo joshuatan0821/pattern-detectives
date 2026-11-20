@@ -8,7 +8,7 @@
       "topic": "Conditionals",
       "foe": "IF-THEN RULE",
       "effect": "Logic is super effective!",
-      "question": "Ethan's rule: \"If a cell is full of honey, then it is sealed with wax.\" Which cell would prove the rule FALSE?",
+      "question": "Chloe's rule: \"If a cell is full of honey, then it is sealed with wax.\" Which cell would prove the rule FALSE?",
       "figure": {
         "type": "logic",
         "lines": [
@@ -50,7 +50,7 @@
       "topic": "Statements related to the conditional",
       "foe": "CONVERSE TRAP",
       "effect": "The contrapositive is super effective!",
-      "question": "Chloe's true statement: \"If it is a honeybee cell, then it is a hexagon.\" Which statement is ALSO always true?",
+      "question": "Ethan's true statement: \"If it is a honeybee cell, then it is a hexagon.\" Which statement is ALSO always true?",
       "figure": {
         "type": "logic",
         "lines": [
